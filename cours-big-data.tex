@@ -188,7 +188,7 @@ We now N samples of p dimensions $x_{ij}$ associated with the N output data $y_i
 
 From now on there are two possible cases: $y_i$ can be known or unknown.
 In the fist case ($y_i$ known), the problem is said to be \emph{supervised}.
-Hence we may work with a finite discrete set of data: $y_i = 1, \cdot, K$.
+Hence we may work with a finite discrete set of data: $y_i = 1, \cdots, K$.
 This problem is called categorical, and we can solve it with 
 \emph{classification}.
 We may also work with an infinite set of numbers: $y_i \in \mathbb{R}$. This
@@ -226,56 +226,90 @@ their unsuperised learning behaviour?
 
 \subsection{Linear Regression}
 
-\paragraph{Least square regression}
+\paragraph{Least square regression at one dimension}
 
-Let N points be $(x_i,y_i)$ with  $p=1, i=1…N$
+Let $p =1$. If we work with N points, then $i=1,\cdots,N$, and we work with a
+set of data $(x_i,y_i)$.
 
-x -> model -> y. The goal is to make a prediction of what the y should be when x is given.
-The simple possible model, is just a linear model: $y=\alpha + \beta x$.
-The issue is to get the best $\alpha$ and $\beta$ for a particular set of data.
-There we have to define a cost function. There are several choices that we can make to justify this. The simplest one would be:
+The goal here is to make a prediction of what the $y$ data should be when $x$ is
+given.
+
+The simplest possible model is the linear regression given by the equation 
+\ref{linear1D}.
+\begin{equation}
+    y=\alpha + \beta x.
+    \label{linear1D}
+\end{equation}
+Here, the main issue is to get the best $\alpha$ and $\beta$ for a particular set
+of data. To know what the best choice is, we may define a cost function, that
+returns a number representing how well the regression permorms. In neural network
+problems, the cost fuction return number is associated with how well the neural
+network performs in mapping training examples to the correct output.
+
+There are several choices that can be made to define the cost function. At one
+dimension, the simplest choice is the sum of squared residuals, defined in
+equation \ref{SSR}, usually shortened as SSR.
 
 \begin{equation}
-l(\alpha,\beta) = \frac{1}{N} \sum_{i=1}^N (y_i - \alpha - \beta x_i )^2
-\label{SSR}
-\end{equation}
+    l(\alpha,\beta) = \frac{1}{N} \sum_{i=1}^N (y_i - \alpha - \beta x_i )^2
+    \label{SSR}
+\end{equation} 
 
-I’m going to look at the best fit for the data. \ref{SSR} is usually called SSR, or sum of squared residuals.
-There’s a simple geometrical interpretation of this, which is given in figure \ref{fig1}.
+Figure \ref{fig1} illustrate a simple geometrical interpretation of what the SSR
+is. Actually, the lower $\epsilon_i$, the better the fit.
 
 \begin{marginfigure}
 \TODO
-\caption{geometrical intepretation of the SSR}
+\caption{geometrical intepretation of the SSR, where $\epsilon_i$ is given by the relation: $\epsilon_i^2 = (y_i - \alpha - \beta x_i)^2$}
 \label{fig1}
 \end{marginfigure}
 
-Where $\epsilon_i$ is given by the relation: $\epsilon_i^2 = (y_i - \alpha - \beta x_i)^2$
+For all we have done up to now, we never have never worked with big data. We
+need $p$ large enough to consider this as a real big data issue.
 
-For the moment, this is not big data. We need $p$ large enough to consider this as a real big data issue.
+If we’re looking at a hundreds or thousands pixels picture composed of hundreds, 
+$p$ will be large in comparison with $N$. That is a full statistics problem.
 
-If we’re looking at a picture, composed of hundreds, thousands of pixels, the $p$ will be large in comparison with $N$. Full statistics problem.
+Currently, $p=1$ is small data, but all we did there has been a correct
+introduction to clearly understand big data problems.
 
-$p=1$ is small data, but that’s a correct introduction to clearly understand the problem. Let’s start with this simple example.
-We want to find the best $\alpha$ and the best $\beta$. Let’s look the optimum: the points where the derivative of l versus $\alpha$ and $\beta$ vanishes.
+Striking a good fit necessitates finding the best $\alpha$ and the best $\beta$.
+For this, we may look at the optimum, defined as the points where the derivative
+of $l$ versus $\alpha$ and $\beta$ vanishes. This is given by equations
+\ref{derlalpha} and \ref{derlbeta}.
 
 \begin{eqnarray}
-\frac{\partial l}{\partial \alpha} & = & - \frac{1}{N} \sum_{i=1}^N (y_i - \alpha - \beta x_i) = 0\\
-\frac{\partial l}{\partial \beta} & =&  -\frac{1}{N} \sum_{i=1}^N x_i (y_i - \alpha -  \beta x_i) = 0
+    \frac{\partial l}{\partial \alpha} & = & - \frac{1}{N} \sum_{i=1}^N (y_i - \alpha - \beta x_i) = 0
+    \label{derlalpha}\\
+    \frac{\partial l}{\partial \beta} & =&  -\frac{1}{N} \sum_{i=1}^N x_i (y_i - \alpha -  \beta x_i) = 0
+    \label{derlbeta}
 \end{eqnarray}
 
+To solve this set of equations, we require a substitution for $x$ and $y$.
 
+Let’s define\footnote{We must keep in mind that $\overline{x^2} \neq \bar{x}^2$.}:
+\begin{eqnarray}
+    \bar{x} & = & \frac{1}{N} \sum_{i=1}^N x_i\\
+    \bar{y} & = & \frac{1}{N} \sum_{i=1}^N y_i\\
+    \overline{xy} & =&  \frac{1}{N} \sum_{i=1}^{N} x_i y_i\\
+    \overline{x^2} & =&  \frac{1}{N} \sum_{i=1}^N x_i^2
+\end{eqnarray}
 
+Thus, equations \ref{derlalpha} and \ref{derlbeta} can be reduced as:
+\begin{eqnarray}
+    \frac{\partial l}{\partial \alpha} &=& - (\bar{y} - \alpha - \beta \bar{x})
+    \label{deralpha2}\\
+    \frac{\partial l}{\partial \beta} &=& - (\overline{xy} - \alpha \bar{x} - \beta \overline{x^2})
+    \label{derbeta2}
+\end{eqnarray}
 
-Let’s define $\bar{x} = \frac{1}{N} \sum_{i=1}^N$ and $\bar{y} = \frac{1}{N} \sum_{i=1}^N y_i$., $\bar{xy} = \frac{1}{N} \sum_{i=1}{N} x_i y_i$ and
-$\bar{x^2} = \frac{1}{N} \sum_{i=1}^N x_i^2$.
+This yields to:
 
-NB: $\bar{x^2} \neq \bar{x}^2$.
+\begin{eqnarray}
+    \alpha & = & \bar{y} + \beta \bar{x}\\
+    \overline{xy} & = &  -\bar{y}\bar{x} - \beta \bar{x}^2 - \beta \overline{x^2}
+\end{eqnarray}
 
-Thus, $\frac{\partial l}{\partial \alpha} = - (\bar{y} - \alpha - \beta \bar{x})$ and $\frac{\partial l}{\partial \beta} = - (\bar{xy} - \alpha
-\bar{x} - \beta \bar{x^2})$
-
-Therefore, $\alpha = \bar{y} + \beta \bar{x}$
-and $\bar{xy} -\bar{y}\bar{x} - \beta \bar{x}^2 - \beta \bar{x^2}$
 
 There we get $\hat{\beta} = \frac{\bar{xy} - \bar{x}\bar{y}}{\bar{x^2} - \bar{x}^2} = \frac{cov(x,y)}{cov(x,x)} = \frac{cov(x,y)}{var(x)}$
 
