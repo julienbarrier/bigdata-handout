@@ -98,14 +98,14 @@ December\fi\space\number\year
 \cleardoublepage
 \chapter*{Introduction}
 
-I have started writing this handout from the notes I have taken from Olivier Rivoire's course on
+I have spartialed writing this handout from the notes I have taken from Olivier Rivoire's course on
 Big Data and Statistical learning at \pc{} from May to April 2018. 
 Please be considerate if some mistakes crop up in this work.
 
 \emph{Julien}
 \vspace{1cm}
 
-Some book reading is advised during the course, particularly:
+Some book reading is advised during the course, partialicularly:
 
 \begin{itemize}
     \item \emph{The Elements of Statistical Learning}, T.~Hastie, R.~Tibshirani and J.~Friedman, Springer Series in Statistics, 2008;
@@ -141,7 +141,7 @@ the training batch.
 
 
 
-Analyticall, let's start with a collection of $x$ and $y$ data, where $x$ stands
+Analyticall, let's spartial with a collection of $x$ and $y$ data, where $x$ stands
 for the input data and $y$ is the vector of the output data.
 Each sample is going to have multiple dimensions, therefore we may use an
 algebraic model. Let $N$ be the number of samples used and p the dimension of
@@ -175,7 +175,7 @@ Deep learning is based on hidden layers, placed inbetween input and output layer
 , that are trained to find correlations and mathematical models.
 
 The goal of this course is to explain whate these objects are, how do they work,
-and put it in relation with state of the art research.
+and put it in relation with state of thepartial research.
 
 What kind of open problems are there? How do neural networks operate? What are
 their unsuperised learning behaviour?
@@ -202,7 +202,7 @@ The simplest possible model is the linear regression given by the equation
     y=\alpha + \beta x.
     \label{linear1D}
 \end{equation}
-Here, the main issue is to get the best $\alpha$ and $\beta$ for a particular set
+Here, the main issue is to get the best $\alpha$ and $\beta$ for a partialicular set
 of data. To know what the best choice is, we may define a cost function, that
 returns a number representing how well the regression permorms. In neural network
 problems, the cost fuction return number is associated with how well the neural
@@ -452,7 +452,7 @@ Models, bias vs variance, cross-validation, maximum likelihood, Bayes, etc.
 
 
 So, what do we do now?
-In general, we want to know what are the most interesting parameters. At the end, we can predict the issue with one or two parameters. Even if we start with a lot of data, we want to find what are the parameterts, the dimensions important in the problem we are working on.
+In general, we want to know what are the most interesting parameters. At the end, we can predict the issue with one or two parameters. Even if we spartial with a lot of data, we want to find what are the parameterts, the dimensions important in the problem we are working on.
 
 Two advantages:
 \begin{description}
@@ -485,7 +485,7 @@ Or $\min_\beta l(\beta)$, given $||\beta||_1 \leq C_2$. This is called the Lasso
 
 In the ridge problem, we assume that the problem is sparse: we only need a few parameters to capture the relationship.
 
-Why did we start to write it this way?
+Why did we spartial to write it this way?
 
 \begin{equation}
 \tilde{l}(\beta) = (Y -X\beta)^T (Y-X\beta) + \lambda \beta^T \beta
@@ -569,7 +569,7 @@ It’s a way to see what kind of correlation we can get just from randomness, in
 
 We can quantify the quantity of noise.
 
-98\% of the eigenvalues are contained in the 1st part of the data. That is 98\% of noise.
+98\% of the eigenvalues are contained in the 1st partial of the data. That is 98\% of noise.
 
 Therefore I write:
 \begin{equation}
@@ -779,9 +779,9 @@ we introduce $\lambda$ as a parameter of regularisation.
 }
 
 \begin{itemize}
-    \item training -> \hat \theta given \lambda
-    \item validation -> \hat \lambda
-    \item test -> Err_{test}
+    \item training -> $\hat \theta$ given $\lambda$
+    \item validation -> $\hat \lambda$
+    \item test -> $Err_{test}$
 \end{itemize}
 
 At the begining, we divide the dataset into multiple datasetts.
@@ -791,16 +791,18 @@ into K subsets. We can get it with statistics. two weeks ago, we've seen an exam
 minimising the mean square error
 
 planning of the day:
-Bayesian approach
-how we do the approximation in practice.
-example of CLASSIFICATION.
+\begin{itemize}
+    \item Bayesian approach
+    \item how we do the approximation in practice.
+    \item example of CLASSIFICATION.
+\end{itemize}
 
 First, let's discuss about maximum likelihood estimation.
 This is not a big-data specific approach. general in statistics.
 In general, I would have a model of the form $ y= f(x,\theta)+ \epsilon$
-where \epsilon stands for the noise. it is a random variable.
-We suppose \epsilon is a normal variable:
-\epsilon \~ N(0,\sigma^2)
+where $\epsilon$ stands for the noise. it is a random variable.
+We suppose $\epsilon$ is a normal variable:
+$\epsilon \~ N(0,\sigma^2)$
 
 The probability to see x with theta:
 \begin{equation}
@@ -809,12 +811,12 @@ The probability to see x with theta:
 
 \begin{marginfigure}
     \TODO
-    \caption{P(y|x,theta) representation. with the standard deviation sigma^2 and centered on f(x,theta)}
+    \caption{P(y|x,theta) representation. with the standard deviation $\sigma^2$ and centered on f(x,theta)}
     \label{gauss}
 \end{marginfigure}
 
-Now, let's imagine we are given a set of values (x_i,y_i). We want to find
-the best parameter \hat \theta.
+Now, let's imagine we are given a set of values $(x_i,y_i)$. We want to find
+the best parameter $\hat \theta$.
 We look at the parameter that make the data the most likeable.
 
 \begin{eqnarray}
@@ -830,20 +832,20 @@ MSE
 MLE: $max_\theta \mathcal{L}(\theta,Z^N) \rightarrow \hat\theta$
 theorem:
 if $y =f(x,\theta_0) + \epsilon$
-\E[\hat\theta] \rightarrow_{N\rightarrow\infty} \theta_0
-\hat\theta \~ N(\theta_0, F(\theta_0)^{-1})
+$$\E[\hat\theta] \rightarrow_{N\rightarrow\infty} \theta_0$$
+$$\hat\theta \~ N(\theta_0, F(\theta_0)^{-1})$$
 
-F(\theta) = \E\mathcal{L}(\theta) this is called the Fisher information.
+$F(\theta) = \E\mathcal{L}(\theta)$ this is called the Fisher information.
 
-I(\theta)_{ij} = - \frac{\part^2 \mathcal{L}}{\part \theta_j \part\theta_k}
+$I(\theta)_{ij} = - \frac{\partial^2 \mathcal{L}}{\partial \theta_j \partial\theta_k}$
 
 Therefore,
 
-\hat\theta \sim (approx) N(\hat\theta, I(\hat\theta)^{-1})
+$\hat\theta \sim (approx) N(\hat\theta, I(\hat\theta)^{-1})$
 
 \begin{marginfigure}
     \TODO
-    figure parabolle inversée, maximum : courbature -\part\mathcal L/\part \theta^2, absisse max : \theta 0. ordonnée : L.
+    figure parabolle inversée, maximum : courbature $-\partial\mathcal L/\partial \theta^2$, absisse max : $\theta_0$. ordonnée : L.
 \end{marginfigure}
 
 We want to find the best parameter, \ie the one that is the more likelihood to be \ldots
@@ -868,31 +870,31 @@ about biliefs. This represent how I believe the event to be actually the case.
 Concretely, the idea of the bayesian approach is:
 elementary probability: when I have two random variables X, Y.
 The joint probability of (X,Y): P(X,Y). we can also define the marginals :
-P(X), P(Y), that are only the probability P(X) = \sum_y P(X,Y).
-P(X|Y): conditional probability.
-P(X,Y) = P(X|Y)P(Y)
-therefore P(X|Y) = \frac{P(X,Y)}{P(Y)}.
+$P(X)$, $P(Y)$, that are only the probability $P(X) = \sum_y P(X,Y)$.
+$P(X|Y)$: conditional probability.
+$P(X,Y) = P(X|Y)P(Y)$
+therefore $P(X|Y) = \frac{P(X,Y)}{P(Y)}$.
 
 
-P(Z,\theta) = \frac{P(Z,\theta)}{P(Z)} = \frac{P(Z|\teta)P(\theta)}{P(Z)}.
+$P(Z,\theta) = \frac{P(Z,\theta)}{P(Z)} = \frac{P(Z|\teta)P(\theta)}{P(Z)}$.
 This is called the Bayes formula.
 
-P(Z=1) = \theta
-P(Z=0) = 1-\theta, for example, for a binomial problem.
+$P(Z=1) = \theta$
+$P(Z=0) = 1-\theta$, for example, for a binomial problem.
 
-P(Z|\theta) is the likelihood I had before.
-In this approach, there's something new, that is P(\theta) wich is called the prior.
+$P(Z|\theta)$ is the likelihood I had before.
+In this approach, there's something new, that is $P(\theta)$ wich is called the prior.
 For a bayesian, we always have some \emph{a priori} bieliefs about the
 distribution of the parameters. When I see the data, I have to update my
 beliefs.
-P(\theta|Z) is called the posterior.
-P(Z) is called the evidence.
+$P(\theta|Z)$ is called the posterior.
+$P(Z)$ is called the evidence.
 
 Here we have to do the inference, that is the general model. Usually, when we
-look at probabilites, we look at P(Z|\theta). reverse approach.
+look at probabilites, we look at $P(Z|\theta)$. reverse approach.
 We look at  the model, that also incorporates the prior.
 
-On the slides, one particular example of the prior to solve a praticular problem.
+On the slides, one partialicular example of the prior to solve a praticular problem.
 
 
 Here, there's nothing to do with big data. example taken from the book of MacKay
@@ -900,28 +902,28 @@ example: Jo has a test for a disease. a = state of health.
 a=1 if sick, 0 otherwise.
 the test is giving another variable b
 what is known about this test is that it can be positive even if there's no
-disease. P(b=1|a=1) = 95\%. same for zero.
+disease. $P(b=1|a=1) = 95\%$. same for zero.
 it means the test gives the right result in 95\% of the cases.
 we need to know the case when somebody of HIS AGE has the disease. this
-is gonna be the prior. P(a=1) = 1\%.
-The exercise is to find what is the probability P(a=1|b=1).
+is gonna be the prior. $P(a=1) = 1\%$.
+The exercise is to find what is the probability $P(a=1|b=1)$.
 In the bayesian approach, we do not have a theta, but a distribution of the theta
 we always have a probability to have different values, especially the maximum
 \emph{a posteriori} estimate (MAP)
 which is given by taking the max of this:
-\max_\theta P(\theta|Z).
+$\max_\theta P(\theta|Z)$.
 
 It will give the same results if we are assuming that this is not depending on theta. If we have a flat prior.
 Then, this is equivalent to the MLE.
 
 When I'm maximising the posterior, it means I'm maximising the likelihood.
-Thus we can see the likelihood as a bayesian approach, with a particular prior
+Thus we can see the likelihood as a bayesian approach, with a partialicular prior
 value.
 
 Let's say we have the same model as before. This time, we assume the prior is
 a one dimensional variable, with a gaussian distribution.
 
-f(\theta)  = \sqrt{\frac{\lambda}{2\pi}} e^{-\lambda \frac{\theta^2}{2}}
+$f(\theta)  = \sqrt{\frac{\lambda}{2\pi}} e^{-\lambda \frac{\theta^2}{2}}$
 
 Then, this will be very similar to the l validation, if we take the log of this.
 Then, this is multiplied by lambda theta square over two.
@@ -931,20 +933,20 @@ the small values of the parameters. width of the gaussian: 1/sqrt(lambda).
 control the probability of the parameter to have a large value.
 restricting the range of the parameter that we are considering, as we saw before
 
-The goal here is to present this particular approach, and recover the maximum
+The goal here is to present this partialicular approach, and recover the maximum
 likelihood.
 An interesting aspect of the bayesian approach. Again, this is very general.
 Let's say that, in general, we have the probability of the data, given some
 hypotheses:
 
-P(D|H_1)
-Dis the data, H_1 thehypothesis.
+$P(D|H_1)$
+Dis the data, $H_1$ thehypothesis.
 
-we want to compare with another hypothesis: P(D|H_2)
+we want to compare with another hypothesis: $P(D|H_2)$
 
 What the bayesian approach is telling us is that we have to consider the
 probability :
-\frac{P(H_1|D)}{P(H_2|D)} = \frac{P(D|H_1)P(H_1)}{P(D|H_2)P(H_2)}.
+$\frac{P(H_1|D)}{P(H_2|D)} = \frac{P(D|H_1)P(H_1)}{P(D|H_2)P(H_2)}$
 
 it depends on the prior we put there. we do not here have no belief????
 
@@ -952,20 +954,20 @@ One example of the maximum likelihood and the general approach.
 
 Problem of generalization.
 Let's say we have the data:
-x_{i=1\ldotsN}. two approaches are possible:
-MLE that gives \hat\theta
-bayesian that gives P(\theta|X).
+$x_{i=1\ldotsN}$. two approaches are possible:
+MLE that gives $\hat\theta$
+bayesian that gives $P(\theta|X)$.
 
-what is the probability of a particular value?
+what is the probability of a partialicular value?
 
-P(x_{N+1}) = (MLE) P(x_{N+1}|\hat\theta). if we need a best value of approximation, let's replace the parameter.
+$P(x_{N+1}) = $(MLE) $P(x_{N+1}|\hat\theta)$. if we need a best value of approximation, let's replace the parameter.
 
-= (bayesian) P(x_{N+1} | X^N) = \sum_\theta P(x_{N+1}|\theta P(\theta |x^N)
+= (bayesian)$ P(x_{N+1} | X^N) = \sum_\theta P(x_{N+1}|\theta P(\theta |x^N)$
 
-    here, P(\theta |x^N) should be used as the new prior. We are constantely updating our believes. this is the prior we get before knowing the
+    here, $P(\theta |x^N)$ should be used as the new prior. We are constantely updating our believes. this is the prior we get before knowing the
     value,
     depending on what we saw before. This has to be equal to:
-    \frac{P(x^N|\theta)P(\theta)}{P(x^N)}
+    $\frac{P(x^N|\theta)P(\theta)}{P(x^N)}$
 
 There's a famous problem that has to do with that: the rule of succession.
 The sun is rising every morning, what is the probability it will rise tomorrow?
@@ -973,58 +975,59 @@ Laplace discussed this issue.
 
 With different approaches, we may get different results. One of the simplest
 example.
-Let's assume there's some probability \theta the sun is rising in the morning.
+Let's assume there's some probability $\theta$ the sun is rising in the morning.
 We hae a binomial model. This is the same issue as a coin that always ends up
 in the same edge: tail for example.
 Maximum likelihood estimation: the probability would be 1.
 
-x_i = 0/1.
-x^N = (x_1, \ldots ,x_N) = (1,\ldots,1)
+$x_i = 0/1.$
 
-P(x_{N+1} = 1) = ?
+$x^N = (x_1, \ldots ,x_N) = (1,\ldots,1)$
+
+$P(x_{N+1} = 1) = ?$
 If we do the maximum likelihood approximation, this would be 1 everytime.
 
-X^N : N_1 times 1 ; N-N_1 times 0. (times : frequency it happens over time)
+$X^N : N_1 times 1 ; N-N_1 times 0.$ (times : frequency it happens over time)
 
-P(x_i|theta) = \theta. One parameter model, binomial model.
-Obviously, the probability P(x_i=0|\theta) = 1 - \theta. this example cannot be
+$P(x_i|theta) = \theta$. One parameter model, binomial model.
+Obviously, the probability $P(x_i=0|\theta) = 1 - \theta$. this example cannot be
 simpler than this.
 
 
-theta can be anything between 0 and 1. 0 \leq \theta \leq 1.
+theta can be anything between 0 and 1. $0 \leq \theta \leq 1$.
 
-I'm giving the same probability for every \theta. P(\theta)\~ uniform.
+I'm giving the same probability for every $\theta$. $P(\theta)\~ $uniform.
 
-P(x_{N+1} =1|x^N) = \int d\theta P(x_{N+1}=1|\theta) P(\theta|x^N)
-= \int d\theta \theta \frac{P(x^N|theta)P(\theta)}{P(x^N)} where P(\theta) = 1
-= \frac{N!}{N_1!(N-N_1)!} \theta^{N_1} (1-\theta)^{N-N_1}
+$P(x_{N+1} =1|x^N) = \int d\theta P(x_{N+1}=1|\theta) P(\theta|x^N)$
+$= \int d\theta \theta \frac{P(x^N|theta)P(\theta)}{P(x^N)} where P(\theta) = 1$
+$= \frac{N!}{N_1!(N-N_1)!} \theta^{N_1} (1-\theta)^{N-N_1}$
 
-The difficulty lies in the P(x^N) that does not depend on theta.
+The difficulty lies in the $P(x^N)$ that does not depend on theta.
 
-P(\theta|x^N)=C(N,N_1) \theta^{N_1} (1-\theta)^{N-N_1}
+$P(\theta|x^N)=C(N,N_1) \theta^{N_1} (1-\theta)^{N-N_1}$
 
-\int d\theta P(\theta|x^N) = 1
+$\int d\theta P(\theta|x^N) = 1$
 
-\int_0^1 d\theta \theta^a (1-\theta)^b = \frac{a!b!}{(a+b+1)!}
+$\int_0^1 d\theta \theta^a (1-\theta)^b = \frac{a!b!}{(a+b+1)!}$
 this exists also for a and b that are not integer values, and this is called the
 gamma function.
 If we use this formula, we would find this to be:
 
-c(N,N_1) = \frac{(N+1)!}{N_1!(N-N_1)!}
+$c(N,N_1) = \frac{(N+1)!}{N_1!(N-N_1)!}$
 with the proper normalisation.
 I need just one line to compute the stuff.
 If I compute this:
 
-P(x_{N+1}=1|x^N) = \int_0^1 d\theta \theta \frac{(N+1)!}{N_1!(N-N_1)!} \theta^{N_1} (1 - \theta)^{N-N_1}
+$P(x_{N+1}=1|x^N) = \int_0^1 d\theta \theta \frac{(N+1)!}{N_1!(N-N_1)!} \theta^{N_1} (1 - \theta)^{N-N_1}
 = \frac{(N+1)!}{N_1!(N-N_1)!} \frac{(N_1 + 1)! (N-N_1)!}{(N+2)!}
-= \frac{N_1 + 1}{N+2} \neq \frac{N_1}{N} (MLE)
+= \frac{N_1 + 1}{N+2} \neq \frac{N_1}{N} (MLE)$
 
 this is called as the laplacian formula.
 
 we have a non-zero probability to observe something that we have never observed
 before.
 
-N=3. X^N = (1,1,1). can we bet that x_4 = 1?
+$N=3. X^N = (1,1,1). can we bet that x_4 = 1?$
 maybe it is not very wise to say this. this rule takes this into account. here, the probability to be 0 will be 1/5, not zero.
 
 people that carry out statistics use pseudo-counts. we are adding one zero and one one.
@@ -1035,12 +1038,12 @@ dependant on the prior.
 Prediction on the next outcomes.
 
 commentary:
-I(\theta) = -\frac{\part^2 \mathcal{L}}{\part \theta_i \part \theta_j}
+$I(\theta) = -\frac{\partial^2 \mathcal{L}}{\partial \theta_i \partial \theta_j}$
 
-\mathcal{F} (\theta) = \E [I(\theta)]
-MLE: \hat\theta \~N(\ldots)
+$\mathcal{F} (\theta) = \E [I(\theta)]$
+MLE: $\hat\theta \~N(\ldots)$
 For each dataset, we can use another expectation. It is mathematical consideration,
-considering all the possibilities of my data.If we are artificially generating
+considering all the possibilities of my data.If we arepartialificially generating
 data 
 when we want to prove all mathematical results analytically, we need all the
 possible datasets that we can get.
@@ -1058,8 +1061,8 @@ second hour.
 
 Now I want to discuss the computational issues.
 
-\hat \theta that I want to maximise. 
-log likelihood: \mathcal{L}(\theta|x^N). we would have, in general, to get these
+$\hat \theta$ that I want to maximise. 
+log likelihood: $\mathcal{L}(\theta|x^N)$. we would have, in general, to get these
 data numerically, and not analytically, with optimised function. compromises to
 be done.
 
@@ -1073,22 +1076,22 @@ In all these problems, we can consider a gradient descent.
 If we want to minimise the function,
 
 scheme fig 2.
-If we look at the gradient, and start from a point (random). we look at the
+If we look at the gradient, and spartial from a point (random). we look at the
 grandient, and move in the direction of it.
-we usually take a very small displacement. start iteratively.
+we usually take a very small displacement. spartial iteratively.
 
-\theta_{t+1} = \theta_{t} - \eta \left( \frac{\part L}{\part \theta}\right)_{\theta_{t}}
+$\theta_{t+1} = \theta_{t} - \eta \left( \frac{\partial L}{\partial \theta}\right)_{\theta_{t}}$
 
 scheme: cf notes.
 
 cf learning rate, etc.
 
-L(\theta) = \sum_{i=1}^N (y_i - f(x_i,\theta))^2
-= \sum L_i(\theta).
+$L(\theta) = \sum_{i=1}^N (y_i - f(x_i,\theta))^2
+= \sum L_i(\theta)$.
 for each calculation, we have to recompute the data.
 a version of this algorithm is used very often, and is called stochastic gradient.
-What we do is: compute L_i(\theta) for a subset of the points.
-So we take a subset of samples to estimate L(\theta) = \sum_{i\in subset} and we
+What we do is: compute $L_i(\theta)$ for a subset of the points.
+So we take a subset of samples to estimate $L(\theta) = \sum_{i\in subset}$ and we
 change at each iteration.
 The sample is called mini-batch.
 
@@ -1096,7 +1099,7 @@ There's one version of this algorithm, where everytime we take a single value as
 a subset: subset =1. this is called on-line learning. in this case, what we are
 doing is:
 
-\theta_{t+1} = \theta_{t} - \eta \nabla_\theta L_i(\theta_{t}).
+$\theta_{t+1} = \theta_{t} - \eta \nabla_\theta L_i(\theta_{t})$.
 
 The issue is to get faster. In general, we have to take the sum.
 At the end, it is equivalent to do a move at everytime than getting the sum from
@@ -1104,15 +1107,15 @@ the very beginning.
 Actually ,this algorithm is very powerful. In neural networks, backpropagation
 is nothing more than this algorithm put in application.
 
-This is really a local method. If I start from one point, I can end somewhere
+This is really a local method. If I spartial from one point, I can end somewhere
 different. I can be trapped in local minima. It is really difficult to find the 
 correct minimum. That's why we usually work with convex functions, where local
 minima do not exist elswhere than the global minimum.
 
-l_0 norm, l_1 norm.
-||\beta||_0 = \# nonzero \beta_j ; ||\beta||_1 = \sum_j |\beta|_j
+$l_0$ norm, $l_1$ norm.
+$||\beta||_0 = \# nonzero \beta_j ; ||\beta||_1 = \sum_j |\beta|_j$
 
-For this reason the closest problem to the first is with l_1, and it is convex
+For this reason the closest problem to the first is with $l_1$, and it is convex
 so that it can be solved with an iterative method. Generally, these are
 considerations we want to take into account.
 We will see examples of doing this next time.
@@ -1120,72 +1123,72 @@ We will see examples of doing this next time.
 Next week: exercise as homework. practical.
 that will be the grade.
 
-min_\beta L(\beta) -> \hat \beta
+$min_\beta L(\beta) -> \hat \beta$
 
 Lasso regression.
 this is one in which we are going to impose a condition:
-||\beta|| \leq t
+$||\beta|| \leq t$
 this is equivalent to the fact that we want to minimize :
-min_\beta L(\beta) + \lambda ||\beta|| with some parameter \lambda.
+$min_\beta L(\beta) + \lambda ||\beta|| with some parameter \lambda.$
 
-ridge regression: ||\beta|| = ||\beta||_2^2
-= \sum \beta_i^2
+ridge regression: $||\beta|| = ||\beta||_2^2
+= \sum \beta_i^2$
 
-if we take the l_1 norm:
+if we take the $l_1$ norm:
 
-lasso regression: ||\beta|| = ||beta||_1 = \sum |\beta_i|
+lasso regression: $||\beta|| = ||beta||_1 = \sum |\beta_i|$
 
 At this stage, we can take it as an exercise.
 
-Le'ts start with the function I want to minimize.
-\mathcal{L} (\beta) = \frac{1}{N} \sum_{i=1}^N (y_i - \beta x_i)^2 + \lambda |\beta|
+Le'ts spartial with the function I want to minimize.
+$\mathcal{L} (\beta) = \frac{1}{N} \sum_{i=1}^N (y_i - \beta x_i)^2 + \lambda |\beta|$
 
 differentiation: we must be careful.
 
-\frac{\part\mathcal{L}}{\part\beta} = 0
+$\frac{\partial\mathcal{L}}{\partial\beta} = 0$
 
-the maximum, if \beta is positive ,let's say, we can get the value:
-(\beta >0)
+the maximum, if $\beta$ is positive ,let's say, we can get the value:
+$(\beta >0)$
 
-\frac{\part\mathcal{L}}{\part\beta} = - \frac{2}{N} \sum_{i=1}^N (y_i - \beta x_i)x_i + \lambda.
+$\frac{\partial\mathcal{L}}{\partial\beta} = - \frac{2}{N} \sum_{i=1}^N (y_i - \beta x_i)x_i + \lambda.$
 
-I would take \bar{x} =0, \bar{y} = 0} and \overline{x^2} = 1. normalise all the
+I would take $\bar{x} =0, \bar{y} = 0$ and $\overline{x^2} = 1$. normalise all the
 data.
 
 In general, everything can have completely different units. It makes sense here
 to normalise, so that each data has the same range of variation.
 So
 
-dL/d beta = -2 (\frac{X^T y}{N} - \beta) + \lambda = 0
+$dL/d beta = -2 (\frac{X^T y}{N} - \beta) + \lambda = 0$
 
-thus \hat \beta = \frac{X^Ty}{N}- \frac{\lambda}{2}
+thus $\hat \beta = \frac{X^Ty}{N}- \frac{\lambda}{2}$
 
-If \frac{X^Ty}{N} > \frac{\lambda}{2}, thus
-\hat{\beta} = \frac{X^Ty}{N} - \frac{\lambda}{2} >0
+If $\frac{X^Ty}{N} > \frac{\lambda}{2}$, thus
+$\hat{\beta} = \frac{X^Ty}{N} - \frac{\lambda}{2} >0$
 
-if \beta < 0, then we can use the same approach.
+if $\beta < 0$, then we can use the same approach.
 
-\hat \beta= S_{\lambda/2} \left( \frac{X^T y}{N} \right)
+$\hat \beta= S_{\lambda/2} \left( \frac{X^T y}{N} \right)$
 
-S_a (u) = \sign(u) \max(O,|u|-a). soft-thresholding operator. cf figure notes.
+$S_a (u) = \sign(u) \max(O,|u|-a)$. soft-thresholding operator. cf figure notes.
 
 This is a figure for p=1.
 
 cf on the website a slide with the formulas.
 
-for p>1,
+for $p>1$,
 
-L(\beta) = \frac{1}{N} \sum_i (y_i - \sum_k \beta_k x_{ik} )^2 + \lambda \sum_k |\beta_k|.
+$L(\beta) = \frac{1}{N} \sum_i (y_i - \sum_k \beta_k x_{ik} )^2 + \lambda \sum_k |\beta_k|$
 
-= \frac{1}{N} \sum_i (y_i - \beta_j x_{ij} - \sum_{k\neq j} \beta_k x_{ik} )^2 + \lambda |\beta_j| + \lambda \sum_{k\neq j} |\beta_k|
+$= \frac{1}{N} \sum_i (y_i - \beta_j x_{ij} - \sum_{k\neq j} \beta_k x_{ik} )^2 + \lambda |\beta_j| + \lambda \sum_{k\neq j} |\beta_k|$
 
 let's define $r_{ij} = y_j - \sum_{k\neq j} \beta_k x_{ik}$
-\hat{\beta_j} <- S_{lambda/2} (\frac{1}{N} x_j^T r_j)
+$\hat{\beta_j} <- S_{lambda/2} (\frac{1}{N} x_j^T r_j)$
 cyclical coordinate descent. we do this for j, and then repeat for j + 1 until
 convergenc.
-we get an interative algorithm. beta 1, then beta2, \ldots
+we get an interative algorithm. $\beta_1$, then $\beta_2$, \ldots
 
-Because the truc is convex, this is going to converge to the minimum of the function L(\beta).
+Because the truc is convex, this is going to converge to the minimum of the function $L(\beta)$.
 
 cf note on this algorithm. If we understand the case for p=1, then we repeat,
 and because the problem is convex, we're going to converge to the single minimum.
