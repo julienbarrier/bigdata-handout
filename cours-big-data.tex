@@ -300,7 +300,7 @@ Let us define the Pearson coefficient $\mathcal{R}$ by the relation \ref{pearson
     \label{pearson}
 \end{equation}
 
-The pearson coefficient $\mathcal{R}$ is always comprised between $0$ and $1$.
+The Pearson coefficient $\mathcal{R}$ is always comprised between $0$ and $1$.
 Thus, we can define the quantity $\mathcal{R}^2$, that relates to the quality of
 the fit:
 
@@ -377,6 +377,9 @@ Let $l(\beta)$ be the cross-function, define with equation \ref{lbeta}.
     \label{lbeta}
 \end{equation}
 
+\marginnote{$^T$ denotes the transpose matrix, defined by the relation:
+$\left[\mathbf{A}^\mathrm{T}\right]_{ij} = \left[\mathbf{A}\right]_{ji}$}
+
 Let $Z$ be a vector whose components $z_i$ are defined as follows:
 
 \begin{equation}
@@ -396,9 +399,6 @@ vanishes at the extremum (eq. \ref{lextrem}).
     \frac{\partial l}{\partial \beta} =  -\frac{Z}{N} X^T(Y-X\beta) =0
     \label{lextrem}
 \end{equation}
-
-\marginnote{$^T$ denotes the transpose matrix, defined by the relation:
-$\left[\mathbf{A}^\mathrm{T}\right]_{ij} = \left[\mathbf{A}\right]_{ji}$}
 
 The equation \ref{lextrem} can be reduced as $X^TY = X^TX\beta$, which can be
 solved by introducing the matrix $C = X^TX$ (eq. \ref{lextremC})\footnote{Note
@@ -749,6 +749,294 @@ I will estimate better the parameters that I have with a constrained set of data
 
 \chapter{Supervised learning: classificaton, regression, nearest neighbours}
 \label{ch:supervised-learning}
+
+last time, we learnt unsupervised learning.
+$(x,y)_{i=1\cdots N}$
+
+Goal : learn $x \rightarrow y$. function: theta
+so that when given new $x_i$
+
+$x_i \rightarrow^{predict} \hat{y_i} \sim y_i$
+function: $\hat\theta$
+
+
+function with two components : $err_{test}$ wich is composed of the bias +
+variance.
+if large amount of data, high variance, very hard to learn, and we get
+very different parameters.
+
+we may want to compromise this with a model with less parameters with 
+a lower variance problem.
+not only we want to pick the best variable in the model, but also the model
+itself.
+we consider a class of problems, described with a parameter $\lambda$.
+we introduce $\lambda$ as a parameter of regularisation.
+
+\marginnotes{we are difining, for example, the error as:
+    \begin{equation*}
+        l(\beta,\lambda) = \frac{1}{N}\sum_{i=1}^N (y_i - \beta x_i)^2 - \lambda ||\beta||_0
+    \end{equation*}
+}
+
+\begin{itemize}
+    \item training -> \hat \theta given \lambda
+    \item validation -> \hat \lambda
+    \item test -> Err_{test}
+\end{itemize}
+
+At the begining, we divide the dataset into multiple datasetts.
+
+K-fold cross validation : the idea is that we have one dataset, that we divide
+into K subsets. We can get it with statistics. two weeks ago, we've seen an example of this, in the context of linear regression.
+minimising the mean square error
+
+planning of the day:
+Bayesian approach
+how we do the approximation in practice.
+example of CLASSIFICATION.
+
+First, let's discuss about maximum likelihood estimation.
+This is not a big-data specific approach. general in statistics.
+In general, I would have a model of the form $ y= f(x,\theta)+ \epsilon$
+where \epsilon stands for the noise. it is a random variable.
+We suppose \epsilon is a normal variable:
+\epsilon \~ N(0,\sigma^2)
+
+The probability to see x with theta:
+\begin{equation}
+    P(y|x,\theta) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp - \frac{(y-f(x,\theta))^2}{2\simga^2}
+\end{equation}
+
+\begin{marginfigure}
+    \TODO
+    \caption{P(y|x,theta) representation. with the standard deviation sigma^2 and centered on f(x,theta)}
+    \label{gauss}
+\end{marginfigure}
+
+Now, let's imagine we are given a set of values (x_i,y_i). We want to find
+the best parameter \hat \theta.
+We look at the parameter that make the data the most likeable.
+
+\begin{eqnarray}
+    \mathcal{L} (\theta|\Z_1,\cdots,Z_n) & =&  \log P(Z^N|\theta)\\
+    & = & \sum_{i=1}^N \log P(Z_i|\theta)\\
+    &=& \sum_{i=1}^N \left[ -\half \log (2\pi\sigma^2) - \frac{1}{2\sigma^2} (y_i - f(x_i,\theta))^2 \right]\\
+    & = & - \frac{N}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}{N} (y_i -f(x_i,\theta))^2 \\
+    &=& -\frac{N}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} l(\theta)
+\end{eqnarray}
+
+MSE
+
+MLE: $max_\theta \mathcal{L}(\theta,Z^N) \rightarrow \hat\theta$
+theorem:
+if $y =f(x,\theta_0) + \epsilon$
+\E[\hat\theta] \rightarrow_{N\rightarrow\infty} \theta_0
+\hat\theta \~ N(\theta_0, F(\theta_0)^{-1})
+
+F(\theta) = \E\mathcal{L}(\theta) this is called the Fisher information.
+
+I(\theta)_{ij} = - \frac{\part^2 \mathcal{L}}{\part \theta_j \part\theta_k}
+
+Therefore,
+
+\hat\theta \sim (approx) N(\hat\theta, I(\hat\theta)^{-1})
+
+\begin{marginfigure}
+    \TODO
+    figure parabolle inversée, maximum : courbature -\part\mathcal L/\part \theta^2, absisse max : \theta 0. ordonnée : L.
+\end{marginfigure}
+
+We want to find the best parameter, \ie the one that is the more likelihood to be \ldots
+
+L is called the log-likelihood. P is colled the likelihood.
+In a sense, we want to find the most likely model.
+
+We can mention, that there are two difficulties :
+\begin{itemize}
+    \item we need to find the maximum
+    \item problem of validation: if we have a more complicated model, we would increase the log likelihood, and no way to do the validation.
+\end{itemize}
+
+Now, another approach: the Bayesian approach. Again, this is not specific to big-data.
+We may know that there are lot of debates in the meaning of probabilities. There
+are two schools: the frequentists: probabilities have a meaning only when the
+event is reapeating many times. Like a coin tail or head. Fundamentally, if I do
+it a large number of time, this is converging.
+If we take an event that can happen only once: the probability that there's lifeon the moon: for a frequentist, there's no meaning.
+the Bayesian view is different in nature: probability is not about counting, but
+about biliefs. This represent how I believe the event to be actually the case.
+Concretely, the idea of the bayesian approach is:
+elementary probability: when I have two random variables X, Y.
+The joint probability of (X,Y): P(X,Y). we can also define the marginals :
+P(X), P(Y), that are only the probability P(X) = \sum_y P(X,Y).
+P(X|Y): conditional probability.
+P(X,Y) = P(X|Y)P(Y)
+therefore P(X|Y) = \frac{P(X,Y)}{P(Y)}.
+
+
+P(Z,\theta) = \frac{P(Z,\theta)}{P(Z)} = \frac{P(Z|\teta)P(\theta)}{P(Z)}.
+This is called the Bayes formula.
+
+P(Z=1) = \theta
+P(Z=0) = 1-\theta, for example, for a binomial problem.
+
+P(Z|\theta) is the likelihood I had before.
+In this approach, there's something new, that is P(\theta) wich is called the prior.
+For a bayesian, we always have some \emph{a priori} bieliefs about the
+distribution of the parameters. When I see the data, I have to update my
+beliefs.
+P(\theta|Z) is called the posterior.
+P(Z) is called the evidence.
+
+Here we have to do the inference, that is the general model. Usually, when we
+look at probabilites, we look at P(Z|\theta). reverse approach.
+We look at  the model, that also incorporates the prior.
+
+On the slides, one particular example of the prior to solve a praticular problem.
+
+
+Here, there's nothing to do with big data. example taken from the book of MacKay
+example: Jo has a test for a disease. a = state of health.
+a=1 if sick, 0 otherwise.
+the test is giving another variable b
+what is known about this test is that it can be positive even if there's no
+disease. P(b=1|a=1) = 95\%. same for zero.
+it means the test gives the right result in 95\% of the cases.
+we need to know the case when somebody of HIS AGE has the disease. this
+is gonna be the prior. P(a=1) = 1\%.
+The exercise is to find what is the probability P(a=1|b=1).
+In the bayesian approach, we do not have a theta, but a distribution of the theta
+we always have a probability to have different values, especially the maximum
+\emph{a posteriori} estimate (MAP)
+which is given by taking the max of this:
+\max_\theta P(\theta|Z).
+
+It will give the same results if we are assuming that this is not depending on theta. If we have a flat prior.
+Then, this is equivalent to the MLE.
+
+When I'm maximising the posterior, it means I'm maximising the likelihood.
+Thus we can see the likelihood as a bayesian approach, with a particular prior
+value.
+
+Let's say we have the same model as before. This time, we assume the prior is
+a one dimensional variable, with a gaussian distribution.
+
+f(\theta)  = \sqrt{\frac{\lambda}{2\pi}} e^{-\lambda \frac{\theta^2}{2}}
+
+Then, this will be very similar to the l validation, if we take the log of this.
+Then, this is multiplied by lambda theta square over two.
+
+When we take a prior on these parameters, we want to give more probability to
+the small values of the parameters. width of the gaussian: 1/sqrt(lambda).
+control the probability of the parameter to have a large value.
+restricting the range of the parameter that we are considering, as we saw before
+
+The goal here is to present this particular approach, and recover the maximum
+likelihood.
+An interesting aspect of the bayesian approach. Again, this is very general.
+Let's say that, in general, we have the probability of the data, given some
+hypotheses:
+
+P(D|H_1)
+Dis the data, H_1 thehypothesis.
+
+we want to compare with another hypothesis: P(D|H_2)
+
+What the bayesian approach is telling us is that we have to consider the
+probability :
+\frac{P(H_1|D)}{P(H_2|D)} = \frac{P(D|H_1)P(H_1)}{P(D|H_2)P(H_2)}.
+
+it depends on the prior we put there. we do not here have no belief????
+
+One example of the maximum likelihood and the general approach.
+
+Problem of generalization.
+Let's say we have the data:
+x_{i=1\ldotsN}. two approaches are possible:
+MLE that gives \hat\theta
+bayesian that gives P(\theta|X).
+
+what is the probability of a particular value?
+
+P(x_{N+1}) = (MLE) P(x_{N+1}|\hat\theta). if we need a best value of approximation, let's replace the parameter.
+
+= (bayesian) P(x_{N+1} | X^N) = \sum_\theta P(x_{N+1}|\theta P(\theta |x^N)
+
+    here, P(\theta |x^N) should be used as the new prior. We are constantely updating our believes. this is the prior we get before knowing the
+    value,
+    depending on what we saw before. This has to be equal to:
+    \frac{P(x^N|\theta)P(\theta)}{P(x^N)}
+
+There's a famous problem that has to do with that: the rule of succession.
+The sun is rising every morning, what is the probability it will rise tomorrow?
+Laplace discussed this issue.
+
+With different approaches, we may get different results. One of the simplest
+example.
+Let's assume there's some probability \theta the sun is rising in the morning.
+We hae a binomial model. This is the same issue as a coin that always ends up
+in the same edge: tail for example.
+Maximum likelihood estimation: the probability would be 1.
+
+x_i = 0/1.
+x^N = (x_1, \ldots ,x_N) = (1,\ldots,1)
+
+P(x_{N+1} = 1) = ?
+If we do the maximum likelihood approximation, this would be 1 everytime.
+
+X^N : N_1 times 1 ; N-N_1 times 0. (times : frequency it happens over time)
+
+P(x_i|theta) = \theta. One parameter model, binomial model.
+Obviously, the probability P(x_i=0|\theta) = 1 - \theta. this example cannot be
+simpler than this.
+
+
+theta can be anything between 0 and 1. 0 \leq \theta \leq 1.
+
+I'm giving the same probability for every \theta. P(\theta)\~ uniform.
+
+P(x_{N+1} =1|x^N) = \int d\theta P(x_{N+1}=1|\theta) P(\theta|x^N)
+= \int d\theta \theta \frac{P(x^N|theta)P(\theta)}{P(x^N)} where P(\theta) = 1
+= \frac{N!}{N_1!(N-N_1)!} \theta^{N_1} (1-\theta)^{N-N_1}
+
+The difficulty lies in the P(x^N) that does not depend on theta.
+
+P(\theta|x^N)=C(N,N_1) \theta^{N_1} (1-\theta)^{N-N_1}
+
+\int d\theta P(\theta|x^N) = 1
+
+\int_0^1 d\theta \theta^a (1-\theta)^b = \frac{a!b!}{(a+b+1)!}
+this exists also for a and b that are not integer values, and this is called the
+gamma function.
+If we use this formula, we would find this to be:
+
+c(N,N_1) = \frac{(N+1)!}{N_1!(N-N_1)!}
+with the proper normalisation.
+I need just one line to compute the stuff.
+If I compute this:
+
+P(x_{N+1}=1|x^N) = \int_0^1 d\theta \theta \frac{(N+1)!}{N_1!(N-N_1)!} \theta^{N_1} (1 - \theta)^{N-N_1}
+= \frac{(N+1)!}{N_1!(N-N_1)!} \frac{(N_1 + 1)! (N-N_1)!}{(N+2)!}
+= \frac{N_1 + 1}{N+2} \neq \frac{N_1}{N} (MLE)
+
+this is called as the laplacian formula.
+
+we have a non-zero probability to observe something that we have never observed
+before.
+
+N=3. X^N = (1,1,1). can we bet that x_4 = 1?
+maybe it is not very wise to say this. this rule takes this into account. here, the probability to be 0 will be 1/5, not zero.
+
+people that carry out statistics use pseudo-counts. we are adding one zero and one one.
+It is a way to regularise the variation.
+In this case, a frequentist would say that we have too few points and that we
+must give up the problem. for a bayesian, the calculation would be very
+dependant on the prior.
+Prediction on the next outcomes.
+
+
+
+
 
 \chapter{Unsupervised learning: dimensionality reduction, PCA, SVD}
 \label{ch:unsupervised-1}
