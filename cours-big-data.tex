@@ -1034,9 +1034,163 @@ must give up the problem. for a bayesian, the calculation would be very
 dependant on the prior.
 Prediction on the next outcomes.
 
+commentary:
+I(\theta) = -\frac{\part^2 \mathcal{L}}{\part \theta_i \part \theta_j}
+
+\mathcal{F} (\theta) = \E [I(\theta)]
+MLE: \hat\theta \~N(\ldots)
+For each dataset, we can use another expectation. It is mathematical consideration,
+considering all the possibilities of my data.If we are artificially generating
+data 
+when we want to prove all mathematical results analytically, we need all the
+possible datasets that we can get.
+variance about everything we can get when generating different datasets.
 
 
 
+
+
+
+
+second hour.
+
+
+
+Now I want to discuss the computational issues.
+
+\hat \theta that I want to maximise. 
+log likelihood: \mathcal{L}(\theta|x^N). we would have, in general, to get these
+data numerically, and not analytically, with optimised function. compromises to
+be done.
+
+Very simple, but the problem can be complicated if the function has several minimum.
+Let's assume the problem is convex: the function is convex, as well as the set
+of data.
+Any global minimum is a global minimum. It can be generate, but,\ldots
+
+In all these problems, we can consider a gradient descent.
+
+If we want to minimise the function,
+
+scheme fig 2.
+If we look at the gradient, and start from a point (random). we look at the
+grandient, and move in the direction of it.
+we usually take a very small displacement. start iteratively.
+
+\theta_{t+1} = \theta_{t} - \eta \left( \frac{\part L}{\part \theta}\right)_{\theta_{t}}
+
+scheme: cf notes.
+
+cf learning rate, etc.
+
+L(\theta) = \sum_{i=1}^N (y_i - f(x_i,\theta))^2
+= \sum L_i(\theta).
+for each calculation, we have to recompute the data.
+a version of this algorithm is used very often, and is called stochastic gradient.
+What we do is: compute L_i(\theta) for a subset of the points.
+So we take a subset of samples to estimate L(\theta) = \sum_{i\in subset} and we
+change at each iteration.
+The sample is called mini-batch.
+
+There's one version of this algorithm, where everytime we take a single value as
+a subset: subset =1. this is called on-line learning. in this case, what we are
+doing is:
+
+\theta_{t+1} = \theta_{t} - \eta \nabla_\theta L_i(\theta_{t}).
+
+The issue is to get faster. In general, we have to take the sum.
+At the end, it is equivalent to do a move at everytime than getting the sum from
+the very beginning.
+Actually ,this algorithm is very powerful. In neural networks, backpropagation
+is nothing more than this algorithm put in application.
+
+This is really a local method. If I start from one point, I can end somewhere
+different. I can be trapped in local minima. It is really difficult to find the 
+correct minimum. That's why we usually work with convex functions, where local
+minima do not exist elswhere than the global minimum.
+
+l_0 norm, l_1 norm.
+||\beta||_0 = \# nonzero \beta_j ; ||\beta||_1 = \sum_j |\beta|_j
+
+For this reason the closest problem to the first is with l_1, and it is convex
+so that it can be solved with an iterative method. Generally, these are
+considerations we want to take into account.
+We will see examples of doing this next time.
+
+Next week: exercise as homework. practical.
+that will be the grade.
+
+min_\beta L(\beta) -> \hat \beta
+
+Lasso regression.
+this is one in which we are going to impose a condition:
+||\beta|| \leq t
+this is equivalent to the fact that we want to minimize :
+min_\beta L(\beta) + \lambda ||\beta|| with some parameter \lambda.
+
+ridge regression: ||\beta|| = ||\beta||_2^2
+= \sum \beta_i^2
+
+if we take the l_1 norm:
+
+lasso regression: ||\beta|| = ||beta||_1 = \sum |\beta_i|
+
+At this stage, we can take it as an exercise.
+
+Le'ts start with the function I want to minimize.
+\mathcal{L} (\beta) = \frac{1}{N} \sum_{i=1}^N (y_i - \beta x_i)^2 + \lambda |\beta|
+
+differentiation: we must be careful.
+
+\frac{\part\mathcal{L}}{\part\beta} = 0
+
+the maximum, if \beta is positive ,let's say, we can get the value:
+(\beta >0)
+
+\frac{\part\mathcal{L}}{\part\beta} = - \frac{2}{N} \sum_{i=1}^N (y_i - \beta x_i)x_i + \lambda.
+
+I would take \bar{x} =0, \bar{y} = 0} and \overline{x^2} = 1. normalise all the
+data.
+
+In general, everything can have completely different units. It makes sense here
+to normalise, so that each data has the same range of variation.
+So
+
+dL/d beta = -2 (\frac{X^T y}{N} - \beta) + \lambda = 0
+
+thus \hat \beta = \frac{X^Ty}{N}- \frac{\lambda}{2}
+
+If \frac{X^Ty}{N} > \frac{\lambda}{2}, thus
+\hat{\beta} = \frac{X^Ty}{N} - \frac{\lambda}{2} >0
+
+if \beta < 0, then we can use the same approach.
+
+\hat \beta= S_{\lambda/2} \left( \frac{X^T y}{N} \right)
+
+S_a (u) = \sign(u) \max(O,|u|-a). soft-thresholding operator. cf figure notes.
+
+This is a figure for p=1.
+
+cf on the website a slide with the formulas.
+
+for p>1,
+
+L(\beta) = \frac{1}{N} \sum_i (y_i - \sum_k \beta_k x_{ik} )^2 + \lambda \sum_k |\beta_k|.
+
+= \frac{1}{N} \sum_i (y_i - \beta_j x_{ij} - \sum_{k\neq j} \beta_k x_{ik} )^2 + \lambda |\beta_j| + \lambda \sum_{k\neq j} |\beta_k|
+
+let's define $r_{ij} = y_j - \sum_{k\neq j} \beta_k x_{ik}$
+\hat{\beta_j} <- S_{lambda/2} (\frac{1}{N} x_j^T r_j)
+cyclical coordinate descent. we do this for j, and then repeat for j + 1 until
+convergenc.
+we get an interative algorithm. beta 1, then beta2, \ldots
+
+Because the truc is convex, this is going to converge to the minimum of the function L(\beta).
+
+cf note on this algorithm. If we understand the case for p=1, then we repeat,
+and because the problem is convex, we're going to converge to the single minimum.
+
+On wednesday, we will see single classification.
 
 \chapter{Unsupervised learning: dimensionality reduction, PCA, SVD}
 \label{ch:unsupervised-1}
