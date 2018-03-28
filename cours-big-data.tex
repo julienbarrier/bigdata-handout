@@ -1200,7 +1200,7 @@ On wednesday, we will see single classification.
 
 regression = supervised learning for quantitative data.
 
-x->y
+$x->y$
 
 if we want to classify pictures between cats and dogs, two kinds of methods:
 - supervised: give information before
@@ -1222,17 +1222,18 @@ involve a bit more methodology.
 
 CLASSIFICATION. 
 
-training data: (x_i,k_i)
-label : k_i = 1, 2, \ldots K.
+training data: $(x_i,k_i)$
+
+label : $k_i = 1, 2, \ldots K$.
 
 
 
 Again, the challenge is using large datasets. we use big data.
-x_{N+1} \rightarrow^? k_{N+1}
+$x_{N+1} \rightarrow^? k_{N+1}$
 
 so far we've used only regression.
-if we start with only two categories : K=2.
-k_i \in \{ 0, 1 \}
+if we start with only two categories : $K=2$.
+$k_i \in \{ 0, 1 \}$
 
 from these data, I can try to predict the value of K in unsupervised learning.
 the closest to 0 and 1, and then get a classification.
@@ -1244,13 +1245,14 @@ we have to find a value somewhere to split the value between two sets of data.
 generally, we have more complicated problems, in larger dimensions.
 here, if we do a linear regression:
 
-y = \hat \alpha + \hat \beta x.
-this is what we did in the first lecture: compute \alpha and \beta that gave us
+$y = \hat \alpha + \hat \beta x$.
+this is what we did in the first lecture: compute $\hat \alpha$ and $\hat \beta$ that gave us
 the best result.
 
 decision boundary:
-if \hat y is larger than \half, then \hat k = 1.
-\hat y < \half => \hat k = 0
+$if \hat y is larger than \half, then \hat k = 1$.
+
+$\hat y < \half => \hat k = 0$
 
 if we start again with p=2.
 it can be in two dimensions.
@@ -1275,7 +1277,7 @@ again we'll se a second class of methods. ability to solve different issues.
 fig 8 for example (marginfigure)
 
 now, let's add another data.
-if y= 0,1,2, there is no practical meaning. no classical order. here it is
+if $y= 0,1,2$, there is no practical meaning. no classical order. here it is
 classification.
 it works well with two categories. if we have three categories, then we can
 split between two categories. data: 1 VS 1.
@@ -1289,22 +1291,28 @@ we added data far enough to put the blue squares in another category.
 
 linear regression:
 
-\min_\beta \frac{1}{N} \sum_i (y_i - \beta x_i)^2
+\begin{equation}
+    \min_\beta \frac{1}{N} \sum_i (y_i - \beta x_i)^2
+\end{equation}
 
 it is more convenient to work with more symmetric data.
 the problem with saying that the error for i is:
 
-error_i = (y_i - \beta x_i)^2.
+\begin{equation}
+    error_i = (y_i - \beta x_i)^2.
+\end{equation}
 
-K=2: k_i = \pm 1 bd if \hat \beta x >0 => +1
-if \hat \beta x<0 => -1
+$K=2$: $k_i = \pm 1 bd$ if $\hat \beta x >0 => +1$
+$if \hat \beta x<0 => -1$
 
-what matters is wether the quantity \hat y = \hat \beta x has the correct sign
+what matters is wether the quantity $\hat y = \hat \beta x$ has the correct sign
 or not.
 
-L(\beta) = \frac{1}{N} \sum_i \max(0, -y_i\beta^T x_i)
+\begin{equation}
+    L(\beta) = \frac{1}{N} \sum_i \max(0, -y_i\beta^T x_i)
+\end{equation}
 
-here again, the idea is that when \beta x is of the same sign as y, the maximum
+here again, the idea is that when $\beta x$ is of the same sign as $y$, the maximum
 is zero, and the error is zero.
 
 this is called hinge regression.
@@ -1315,8 +1323,9 @@ smooth version -> logistic regression.
 
 the idea is to replace this versiona
 fig 10.
-L(\beta) = \frac{1}{N} \sum_i \ln (1+e^{-y_i \beta^T x_i )
-.
+\begin{equation}
+    L(\beta) = \frac{1}{N} \sum_i \ln (1+e^{-y_i \beta^T x_i )
+\end{equation}
 
 he tries to minimise the error, and the split value with  that logistic regression.
 
@@ -1327,39 +1336,71 @@ we will see this later on.
 instead of taking the reflection y to be k, it's easier to consider y to be
 a probability. it makes here much more sense to make a linear regression.
 a probabilistic model, in which I want to describe the probability, given some data.
-parameter \omega: weight, standard notation in neural networks, whereas \beta is
+parameter $\omega$: weight, standard notation in neural networks, whereas $\beta$ is
 much more used in classical regression/statistical learning models.
 
-P(k=1 | x,\omega)
+\begin{equation}
+    P(k=1 | x,\omega)
+\end{equation}
 
-P(k=1|x,\omega ) > P(k=-1|x,\omega) => \hat k = 1
-<      => \hat k = -1
+\begin{eqnarray}
+    P(k=1|x,\omega ) & > &  P(k=-1|x,\omega) & => \hat k = 1 \\
+    & < &     &  => \hat k = -1
+\end{eqnarray}
+
 
 if we are considering the log of the proabilities:
-\ln \frac{P(k=1|x,\omega)}{P(k=-1|x,\omega)} = \omega^T x
-= \sum_{j=1}^P \omega_j x_j (+\omega_0)
+\begin{eqnarray}
+    \ln \frac{P(k=1|x,\omega)}{P(k=-1|x,\omega)} & = & \omega^T x\\
+    & = &  \sum_{j=1}^P \omega_j x_j (+\omega_0)
+\end{eqnarray}
 
-i don't have to always write +\omega_0, for convenience, just changes in the
+
+I don't have to always write $+\omega_0$, for convenience, just changes in the
 problem that have no influence.
 
 In general, I want to define a more relevant model.
 
 Let's call:
-y=P(k=1|x,\omega).
-\ln (\frac{y}{1-y}) = \omega^T x
+\begin{equation}
+    y=P(k=1|x,\omega)
+\end{equation}
+\begin{equation}
+    \ln (\frac{y}{1-y}) = \omega^T x
+\end{equation}
 
-\frac{y}{1-y} = \exp (\omega^T x)
-thus y = e^{\omega^T x} (1-y)
-therefore y(1+e^{\omega^T x}) = e^{\omega^T x}
+\begin{equation}
+    \frac{y}{1-y} = \exp (\omega^T x)
+\end{equation}
 
-y = \frac{e^{\omega^T x}}{1+e^{\omega^Tx}} = \frac{1}{1+e^{-\omega^T x}}
+thus
+\begin{equation}
+    y = e^{\omega^T x} (1-y)
+\end{equation}
 
-P(k|x,\omega) = \frac{1}{1+e^{-k\omega^T x}}
+therefore
+\begin{equation}
+    y(1+e^{\omega^T x}) = e^{\omega^T x}
+\end{equation}
 
-\mathcal{L}(\omega) = \frac{1}{N} \sum_i \ln P(k_i |x_i,\omega) MLE
+\begin{equation}
+    y = \frac{e^{\omega^T x}}{1+e^{\omega^Tx}} = \frac{1}{1+e^{-\omega^T x}}
+\end{equation}
+
+\begin{equation}
+    P(k|x,\omega) = \frac{1}{1+e^{-k\omega^T x}}
+\end{equation}
+
+
+\begin{equation}
+    \mathcal{L}(\omega) = \frac{1}{N} \sum_i \ln P(k_i |x_i,\omega) MLE
+\end{equation}
+
 if i replace P by its form:
 
-\mathcal{L}(\omega) = - \frac{1}{N} \sum_i \ln (1 + e^{-k_i \omega^T x_i})
+\begin{equation}
+    \mathcal{L}(\omega) = - \frac{1}{N} \sum_i \ln (1 + e^{-k_i \omega^T x_i})
+\end{equation}
 
 Essentially, the idea was to apply the maximum likelihood. I had to make 
 hypothesis on the general form of the model. Once I do this, I
@@ -1367,28 +1408,38 @@ end up with this function. The different with the one above:  minus sign.
 not surprising: a likelihood we want to maximise, and not error we want to
 minimize.
 
-\max_\omega \mathcal{L}(\omega) <=> \min_\beta L(\beta)
+\begin{equation}
+    \max_\omega \mathcal{L}(\omega) <=> \min_\beta L(\beta)
+\end{equation}
 
 in neural networks,
 
 fig11
 
-u = \sum_{j=1}^p \omega_j x_j = \omega^T x is called the activation.
+\begin{equation}
+    u = \sum_{j=1}^p \omega_j x_j = \omega^T x 
+\end{equation}
+is called the activation.
 
 several inputs, and one output based on this.
-if u>0, then I have output y=1.
-if u<0, then y=0.
+if $u>0$, then I have output $y=1$.
+if $u<0$, then $y=0$.
 
 in the context of neural networks, people prefer work with 0 and 1 rather than
-\pm 1.
+$\pm 1$.
 
 neuron is a classifier
 
 fig11
 
-y = \phi (u)
+\begin{equation}
+    y = \phi (u)
+\end{equation}
 
-\phi (u) = \frac{1}{1+e^{-u}}
+\begin{equation}
+    \phi (u) = \frac{1}{1+e^{-u}}
+\end{equation}
+
 essentially, what we do, is considering the different inputs with different
 weights.
 At the end, we will end with more complex classifier models. this one is very
@@ -1398,33 +1449,57 @@ there are very simple algorithms, like the gradient descent.
 
 let's start again with the log likelihood:
 
-\mathcal{L}(\omega) = \frac{1}{N} \sum_i (k_i \ln y_i + (1-k_i) \ln(1-y_i))
- = \frac{1}{N} \sum_i \ln P (k_i | x_i,\omega)
+\begin{eqnarray}
+    \mathcal{L}(\omega) & = & \frac{1}{N} \sum_i (k_i \ln y_i + (1-k_i) \ln(1-y_i))\\
+    & = & \frac{1}{N} \sum_i \ln P (k_i | x_i,\omega)
+\end{eqnarray}
 
-y_i = P(k_i =1 |x,\omega)a
+\begin{equation}
+    y_i = P(k_i =1 |x,\omega)
+\end{equation}
 
-ln(P(\ldots)) = y_i if k_i = 1
-= 1-y_i if k_i = 0.
+\begin{eqnarray}
+    ln(P(\ldots)) & = & y_i & if k_i = 1 \\
+    & = & 1-y_i & if k_i = 0
+\end{eqnarray}
 
 then we make the model by assuming:
 
-y_i = \phi (u_i) where u_i = \omega^T x_i = \sum_{j=1} \omega_j x_{ij}
+\begin{equation}
+    y_i = \phi (u_i) where u_i = \omega^T x_i = \sum_{j=1} \omega_j x_{ij}
+\end{equation}
+
 now, we want to compute the gradient.
 it means to compute the derivative of the log likelihood:
 
-\frac{\partial \mathcal{L}}{\partial \omega_j} = \frac{1}{N} \sum_i (k_i \frac{1}{y_i} \frac{\partial y_i}{\partial\omega_j} - (1-k_i)
+\begin{equation}
+    \frac{\partial \mathcal{L}}{\partial \omega_j} = \frac{1}{N} \sum_i (k_i \frac{1}{y_i} \frac{\partial y_i}{\partial\omega_j} - (1-k_i)
 \frac{1}{1-y_i}) \frac{\partial y_i}{\partial \omega_j}
+\end{equation}
 
-with (\ldots) = \frac{ k_i (1-y_i) - (1-k_i)y_i}{y_i (1-y_i)} = \frac{k_i - y_i}{y_i (1-y_i)} 
+with
+\begin{equation}
+    (\ldots) = \frac{ k_i (1-y_i) - (1-k_i)y_i}{y_i (1-y_i)} = \frac{k_i - y_i}{y_i (1-y_i)} 
+\end{equation}
 
-and \frac{\partial y_i}{\partial \omega_j} = \phi'(u_i) \frac{\partial u_i}{\partial \omega_j} = \phi'(u_i) X_{ij}
+
+and \begin{equation}
+    \frac{\partial y_i}{\partial \omega_j} = \phi'(u_i) \frac{\partial u_i}{\partial \omega_j} = \phi'(u_i) X_{ij}
+\end{equation}
+
 
 thus
-\frac{\partial \mathcal{L}}{\partial\omega_j} = \frac{1}{N} \sum_i \frac{\phi'(u_i)}{\phi(u_i) (1-\phi(u_i))} (k_i - y_i) x_{ij}
+\begin{equation}
+    \frac{\partial \mathcal{L}}{\partial\omega_j} = \frac{1}{N} \sum_i \frac{\phi'(u_i)}{\phi(u_i) (1-\phi(u_i))} (k_i - y_i) x_{ij}
+\end{equation}
 
-\phi (u) = \frac{1}{1+e^{-u}} => \frac{\phi''}{\phi (1-\phi)} = 1.
+\begin{equation}
+    \phi (u) = \frac{1}{1+e^{-u}} => \frac{\phi''}{\phi (1-\phi)} = 1
+\end{equation}
 
-\frac{\partial \mathcal{L}}{\partial \omega_j} = \frac{1}{N} \sum_i (k_i - y_i) x_{ij}
+\begin{equation}
+    \frac{\partial \mathcal{L}}{\partial \omega_j} = \frac{1}{N} \sum_i (k_i - y_i) x_{ij}
+\end{equation}
 
 for neural networks, the same idea as gradinet descent is called backpropagation
 , but it is a bit more complicated.
@@ -1432,7 +1507,10 @@ for neural networks, the same idea as gradinet descent is called backpropagation
 fig 2.1: representation of classification.
 
 support vector machine : SVM
-problem formally attitred: \min_\omega \sum_i \max(0,1-k_i \omega^T x_i ) + \lambda ||\omega||^2.
+problem formally attitred: 
+\begin{equation}
+    \min_\omega \sum_i \max(0,1-k_i \omega^T x_i ) + \lambda ||\omega||^2
+\end{equation}
 
 the exercise is trying to find what this function is doing.
 
@@ -1468,15 +1546,19 @@ fig13
 we are given with a particular point, and say if it is red or blue.
 what are the neighbours doing?
 
-if k=3, i am looking at the three nearest points, and then take the colour of
+if $k=3$, i am looking at the three nearest points, and then take the colour of
 the majority.
 
 mathematically, it can be written as:
 
-\hat y(x)  = \frac{1}{k} \sum_{i\in N_k(x)} y_i
+\begin{equation}
+    \hat y(x)  = \frac{1}{k} \sum_{i\in N_k(x)} y_i
+\end{equation}
 
-N_k(x) is the set of k nearest neighbours to x
-y_i \in \{0,1\}
+
+$N_k(x)$ is the set of $k$ nearest neighbours to $x$
+
+$y_i \in \{0,1\}$
 
 Again, we can be in a situation described by fig 14.
 we have, there, a decision boundary. i'm deciding what is the coulour of the
@@ -1486,7 +1568,7 @@ fig 2.2 and 2.3. variations of K
 
 now the question is: what should we take for K
 
-\frac{N}{k} \sim p : number of degrees of freedom.
+$\frac{N}{k} \sim p$ : number of degrees of freedom.
 
 
 fig 15
@@ -1517,14 +1599,18 @@ essentially, we would average around the point that are close to the considered
 point. more generally, we can do it with a hard cutoff close/far or smooth
 cutoffs.
 
-\hat y(x) = \frac{\sum_i K_\lambda (x,x_i)y_i}{\sum_i k_\lambda (x,x_i)}
+\begin{equation}
+    \hat y(x) = \frac{\sum_i K_\lambda (x,x_i)y_i}{\sum_i k_\lambda (x,x_i)}
+\end{equation}
 
-K_\lambda (x,x_i) = \frac{1}{\lambda} e^{-\frac{||x-x'||^2}{2\lambda}}.
+\begin{equation}
+    K_\lambda (x,x_i) = \frac{1}{\lambda} e^{-\frac{||x-x'||^2}{2\lambda}}
+\end{equation}
 
-or K_\lambda (x,x_i) = 1 if ||x-x'||<\lambda, 0 otherwise.
+or $K_\lambda (x,x_i) = 1$ if $||x-x'||<\lambda$, 0 otherwise.
 
 kernel methods also posisble.
-if we do this, it is also a case where we have one parameter: \lambda. It plays
+if we do this, it is also a case where we have one parameter: $\lambda$. It plays
 the same role.
 big lambda: averaging a lot.
 we would reduce the variance, but with a too large bias.
@@ -1559,11 +1645,16 @@ are false when we are working with high dimensional spaces.
 
 example in 2D in fig 17.
 
-volume is scaling as power p of the radius. V = \alpha_p r^p.
+volume is scaling as power p of the radius. $V = \alpha_p r^p$.
 
-If we look at \frac{V}{V_{tot}} = \left( \frac{r}{r_{tot}} \right)^p
+If we look at $\frac{V}{V_{tot}} = \left( \frac{r}{r_{tot}} \right)^p$
+
 then we have 
-\frac{r}{r_{tot}} = \left( \frac{V}{V_{tot}} \right)^{1/p}
+
+\begin{equation}
+    \frac{r}{r_{tot}} = \left( \frac{V}{V_{tot}} \right)^{1/p}
+\end{equation}
+
 
 If the ratio V/Vtot = 0.01.
 if we take something like p=10, we'll see that r/rtot = 0.6.
@@ -1596,6 +1687,14 @@ In priciple, everything should be comprised in the lecture.
 code it ourself. not using things already written. the game here is to write
 ourself our own libraries. it is not very complicated, each question is just
 a few lines of code.
+
+with python: using the jupyter.
+matlab: not sure it is doeable. livescripts.
+write a report in which he can see the code. in a format he can actually work
+the code.
+minimal thing: write the code and display the figures.
+this is a public problem, neither on the solutions presented on the internet is
+good, we might think about it from ourselves.
 
 
 
