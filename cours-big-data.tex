@@ -53,8 +53,9 @@ December\fi\space\number\year
 \usepackage{stmaryrd}
 \usepackage{amsmath,amsfonts,amssymb}
 \usepackage{mathrsfs}
-
+\usepackage{dsfont}
 \newcommand{\measure}[3]{#1/#2$\times$\unit[#3]{pc}}
+\DeclareMathOperator{\sign}{sign}
 
 \newcommand{\hlred}[1]{\textcolor{Maroon}{#1}}% prints in red
 \newcommand{\hangleft}[1]{\makebox[0pt][r]{#1}}
@@ -470,18 +471,18 @@ discriminating between datasets without having the aforesaid issues.
 
 
 Generally, big data issues are composed of many parameters, with which it is
-energy-consuming. We usually want to reduce the problems to one or two
+very energy-consuming. We usually want to reduce the problems to one or two
 interesting parameters. Even if start with a lot of data, we would need to find
 what are those interesting parameters, and what are the important dimensions of
 the problem we will be working on.
 
 There are two advantages at reducing the number of parameters:
-\begin{description}
+\begin{itemize}
     \item[accuracy] With less parameters, we can estimate them with much more
         accuracy;
     \item[easiness] it is always easier to estimate things on a condensed set
         of parameters.
-\end{description}
+\end{itemize}
 
 Hence the issue is to find a compromise between having enough parameters to
 estimate properly the result of the problem, without loosing precision when
@@ -523,17 +524,17 @@ The second model is called the \emph{Lasso regression} and consists in finding:
 In the ridge problem, we assume that the problem is sparse: we only need a few
 parameters to capture the relationship.
 
-Why did we spartial to write it this way?
+Why did we start to write it this way?
 
 \begin{equation} 
 \tilde{l}(\beta) = (Y -X\beta)^T (Y-X\beta) + \lambda \beta^T \beta
 \end{equation}
 
 \begin{equation}
-\frac{\partial \tilde{l}(\beta)}{\partial \beta} = 2 (-X^T(Y-X\beta) + \lambda \beta) = 2 (-X^T Y + (X^TX + \lambda \mathcal{1})\beta
+\frac{\partial \tilde{l}(\beta)}{\partial \beta} = 2 (-X^T(Y-X\beta) + \lambda \beta) = 2 (-X^T Y + (X^TX + \lambda \mathds{1})\beta
 \end{equation}
 
-$\mathcal{1}$ is the identity matrix.
+$\mathds{1}$ is the identity matrix.
 
 What is doing is putting constraints. You add constraints and then you can solve mathematically the problem.
 
@@ -912,7 +913,7 @@ $P(X,Y) = P(X|Y)P(Y)$
 therefore $P(X|Y) = \frac{P(X,Y)}{P(Y)}$.
 
 
-$P(Z,\theta) = \frac{P(Z,\theta)}{P(Z)} = \frac{P(Z|\teta)P(\theta)}{P(Z)}$.
+$P(Z,\theta) = \frac{P(Z,\theta)}{P(Z)} = \frac{P(Z|\theta)P(\theta)}{P(Z)}$.
 This is called the Bayes formula.
 
 $P(Z=1) = \theta$
@@ -990,7 +991,7 @@ One example of the maximum likelihood and the general approach.
 
 Problem of generalization.
 Let's say we have the data:
-$x_{i=1\ldotsN}$. two approaches are possible:
+$x_{i=1\ldots N}$. two approaches are possible:
 MLE that gives $\hat\theta$
 bayesian that gives $P(\theta|X)$.
 
@@ -1032,7 +1033,7 @@ simpler than this.
 
 theta can be anything between 0 and 1. $0 \leq \theta \leq 1$.
 
-I'm giving the same probability for every $\theta$. $P(\theta)\~ $uniform.
+I'm giving the same probability for every $\theta$. $P(\theta) \sim $uniform.
 
 $P(x_{N+1} =1|x^N) = \int d\theta P(x_{N+1}=1|\theta) P(\theta|x^N)$
 $= \int d\theta \theta \frac{P(x^N|theta)P(\theta)}{P(x^N)} where P(\theta) = 1$
@@ -1360,7 +1361,7 @@ smooth version -> logistic regression.
 the idea is to replace this versiona
 fig 10.
 \begin{equation}
-    L(\beta) = \frac{1}{N} \sum_i \ln (1+e^{-y_i \beta^T x_i )
+    L(\beta) = \nth \sumin \ln (1+e^{-y_i \beta^T x_i} )
 \end{equation}
 
 he tries to minimise the error, and the split value with  that logistic regression.
@@ -1380,8 +1381,8 @@ much more used in classical regression/statistical learning models.
 \end{equation}
 
 \begin{eqnarray}
-    P(k=1|x,\omega ) & > &  P(k=-1|x,\omega) & => \hat k = 1 \\
-    & < &     &  => \hat k = -1
+    P(k=1|x,\omega ) & >  P(k=-1|x,\omega) & => \hat k = 1 \\
+    & <      &  => \hat k = -1
 \end{eqnarray}
 
 
@@ -1495,8 +1496,8 @@ let's start again with the log likelihood:
 \end{equation}
 
 \begin{eqnarray}
-    ln(P(\ldots)) & = & y_i & if k_i = 1 \\
-    & = & 1-y_i & if k_i = 0
+    ln(P(\ldots)) & = y_i & \;\text{if}\; k_i = 1 \\
+    & = 1-y_i & \;\text{if}\; k_i = 0
 \end{eqnarray}
 
 then we make the model by assuming:
