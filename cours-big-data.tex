@@ -773,15 +773,15 @@ we consider a class of problems, described with a parameter $\lambda$.
 we introduce $\lambda$ as a parameter of regularisation.
 
 \marginnotes{we are difining, for example, the error as:
-    \begin{equation*}
-        l(\beta,\lambda) = \frac{1}{N}\sum_{i=1}^N (y_i - \beta x_i)^2 - \lambda ||\beta||_0
-    \end{equation*}
+\begin{equation*}
+    l(\beta,\lambda) = \frac{1}{N}\sum_{i=1}^N (y_i - \beta x_i)^2 - \lambda ||\beta||_0
+\end{equation*}
 }
 
 \begin{itemize}
-    \item training -> $\hat \theta$ given $\lambda$
-    \item validation -> $\hat \lambda$
-    \item test -> $Err_{test}$
+\item training -> $\hat \theta$ given $\lambda$
+\item validation -> $\hat \lambda$
+\item test -> $Err_{test}$
 \end{itemize}
 
 At the begining, we divide the dataset into multiple datasetts.
@@ -792,9 +792,9 @@ minimising the mean square error
 
 planning of the day:
 \begin{itemize}
-    \item Bayesian approach
-    \item how we do the approximation in practice.
-    \item example of CLASSIFICATION.
+\item Bayesian approach
+\item how we do the approximation in practice.
+\item example of CLASSIFICATION.
 \end{itemize}
 
 First, let's discuss about maximum likelihood estimation.
@@ -806,13 +806,13 @@ $\epsilon \~ N(0,\sigma^2)$
 
 The probability to see x with theta:
 \begin{equation}
-    P(y|x,\theta) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp - \frac{(y-f(x,\theta))^2}{2\simga^2}
+P(y|x,\theta) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp - \frac{(y-f(x,\theta))^2}{2\simga^2}
 \end{equation}
 
 \begin{marginfigure}
-    \TODO
-    \caption{P(y|x,theta) representation. with the standard deviation $\sigma^2$ and centered on f(x,theta)}
-    \label{gauss}
+\TODO
+\caption{P(y|x,theta) representation. with the standard deviation $\sigma^2$ and centered on f(x,theta)}
+\label{gauss}
 \end{marginfigure}
 
 Now, let's imagine we are given a set of values $(x_i,y_i)$. We want to find
@@ -820,11 +820,11 @@ the best parameter $\hat \theta$.
 We look at the parameter that make the data the most likeable.
 
 \begin{eqnarray}
-    \mathcal{L} (\theta|\Z_1,\cdots,Z_n) & =&  \log P(Z^N|\theta)\\
-    & = & \sum_{i=1}^N \log P(Z_i|\theta)\\
-    &=& \sum_{i=1}^N \left[ -\half \log (2\pi\sigma^2) - \frac{1}{2\sigma^2} (y_i - f(x_i,\theta))^2 \right]\\
-    & = & - \frac{N}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}{N} (y_i -f(x_i,\theta))^2 \\
-    &=& -\frac{N}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} l(\theta)
+\mathcal{L} (\theta|\Z_1,\cdots,Z_n) & =&  \log P(Z^N|\theta)\\
+& = & \sum_{i=1}^N \log P(Z_i|\theta)\\
+&=& \sum_{i=1}^N \left[ -\half \log (2\pi\sigma^2) - \frac{1}{2\sigma^2} (y_i - f(x_i,\theta))^2 \right]\\
+& = & - \frac{N}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}{N} (y_i -f(x_i,\theta))^2 \\
+&=& -\frac{N}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} l(\theta)
 \end{eqnarray}
 
 MSE
@@ -844,8 +844,8 @@ Therefore,
 $\hat\theta \sim (approx) N(\hat\theta, I(\hat\theta)^{-1})$
 
 \begin{marginfigure}
-    \TODO
-    figure parabolle inversée, maximum : courbature $-\partial\mathcal L/\partial \theta^2$, absisse max : $\theta_0$. ordonnée : L.
+\TODO
+figure parabolle inversée, maximum : courbature $-\partial\mathcal L/\partial \theta^2$, absisse max : $\theta_0$. ordonnée : L.
 \end{marginfigure}
 
 We want to find the best parameter, \ie the one that is the more likelihood to be \ldots
@@ -855,8 +855,8 @@ In a sense, we want to find the most likely model.
 
 We can mention, that there are two difficulties :
 \begin{itemize}
-    \item we need to find the maximum
-    \item problem of validation: if we have a more complicated model, we would increase the log likelihood, and no way to do the validation.
+\item we need to find the maximum
+\item problem of validation: if we have a more complicated model, we would increase the log likelihood, and no way to do the validation.
 \end{itemize}
 
 Now, another approach: the Bayesian approach. Again, this is not specific to big-data.
@@ -964,10 +964,10 @@ $P(x_{N+1}) = $(MLE) $P(x_{N+1}|\hat\theta)$. if we need a best value of approxi
 
 = (bayesian)$ P(x_{N+1} | X^N) = \sum_\theta P(x_{N+1}|\theta P(\theta |x^N)$
 
-    here, $P(\theta |x^N)$ should be used as the new prior. We are constantely updating our believes. this is the prior we get before knowing the
-    value,
-    depending on what we saw before. This has to be equal to:
-    $\frac{P(x^N|\theta)P(\theta)}{P(x^N)}$
+here, $P(\theta |x^N)$ should be used as the new prior. We are constantely updating our believes. this is the prior we get before knowing the
+value,
+depending on what we saw before. This has to be equal to:
+$\frac{P(x^N|\theta)P(\theta)}{P(x^N)}$
 
 There's a famous problem that has to do with that: the rule of succession.
 The sun is rising every morning, what is the probability it will rise tomorrow?
@@ -1197,6 +1197,409 @@ On wednesday, we will see single classification.
 
 \chapter{Unsupervised learning: dimensionality reduction, PCA, SVD}
 \label{ch:unsupervised-1}
+
+regression = supervised learning for quantitative data.
+
+x->y
+
+if we want to classify pictures between cats and dogs, two kinds of methods:
+- supervised: give information before
+- unsupervised: you figure out that there are two categories, understand that
+there are two categories, and learn from that.
+
+fig 5
+
+distincition on the nature of the variable that we want to predict.
+quantitative data : why is it a real number or a vector?
+
+we are going to see today classification. so far we've seen just supervised
+quantitative : regression. there are more task to do.
+
+today : classification.
+next course : clustering.
+after that : neural networks, that can be used for any of those tasks, that
+involve a bit more methodology.
+
+CLASSIFICATION. 
+
+training data: (x_i,k_i)
+label : k_i = 1, 2, \ldots K.
+
+
+
+Again, the challenge is using large datasets. we use big data.
+x_{N+1} \rightarrow^? k_{N+1}
+
+so far we've used only regression.
+if we start with only two categories : K=2.
+k_i \in \{ 0, 1 \}
+
+from these data, I can try to predict the value of K in unsupervised learning.
+the closest to 0 and 1, and then get a classification.
+
+let's start with the case where $p=1$.
+fig 6
+
+we have to find a value somewhere to split the value between two sets of data.
+generally, we have more complicated problems, in larger dimensions.
+here, if we do a linear regression:
+
+y = \hat \alpha + \hat \beta x.
+this is what we did in the first lecture: compute \alpha and \beta that gave us
+the best result.
+
+decision boundary:
+if \hat y is larger than \half, then \hat k = 1.
+\hat y < \half => \hat k = 0
+
+if we start again with p=2.
+it can be in two dimensions.
+
+fig 7.
+
+data linearly separable: we can put an hyperplan that separates the data.
+define a decision boundary.
+there we can define an error.
+
+NB: in advance, we cannot preduct wich method would work, before looking at the
+data. In practical, no method would separate perfeclty the data.
+if we augment the dimension of the space, we can consider other functions : for
+example quadratic instead of linear.
+tradeoff : if we add more parameters, sure we can reduce the training error, but
+also, in general, increase the variance.
+back to the problem already discussed: how to find the correct level of
+complexity. surely it can fit the data, but may not be generalised.
+
+data still have to be linearly separable.
+again we'll se a second class of methods. ability to solve different issues.
+fig 8 for example (marginfigure)
+
+now, let's add another data.
+if y= 0,1,2, there is no practical meaning. no classical order. here it is
+classification.
+it works well with two categories. if we have three categories, then we can
+split between two categories. data: 1 VS 1.
+based on the boundaries, I will decide which boundary I can consider.
+
+
+This was a naive approach. If I start again with p=1:
+fig 9.
+
+we added data far enough to put the blue squares in another category.
+
+linear regression:
+
+\min_\beta \frac{1}{N} \sum_i (y_i - \beta x_i)^2
+
+it is more convenient to work with more symmetric data.
+the problem with saying that the error for i is:
+
+error_i = (y_i - \beta x_i)^2.
+
+K=2: k_i = \pm 1 bd if \hat \beta x >0 => +1
+if \hat \beta x<0 => -1
+
+what matters is wether the quantity \hat y = \hat \beta x has the correct sign
+or not.
+
+L(\beta) = \frac{1}{N} \sum_i \max(0, -y_i\beta^T x_i)
+
+here again, the idea is that when \beta x is of the same sign as y, the maximum
+is zero, and the error is zero.
+
+this is called hinge regression.
+
+the idea is gradient descent
+
+smooth version -> logistic regression.
+
+the idea is to replace this versiona
+fig 10.
+L(\beta) = \frac{1}{N} \sum_i \ln (1+e^{-y_i \beta^T x_i )
+.
+
+he tries to minimise the error, and the split value with  that logistic regression.
+
+we can also arrive to similar results by chosing different approaches.
+this is connected to the kind of operations that are done in neural networks.
+we will see this later on.
+
+instead of taking the reflection y to be k, it's easier to consider y to be
+a probability. it makes here much more sense to make a linear regression.
+a probabilistic model, in which I want to describe the probability, given some data.
+parameter \omega: weight, standard notation in neural networks, whereas \beta is
+much more used in classical regression/statistical learning models.
+
+P(k=1 | x,\omega)
+
+P(k=1|x,\omega ) > P(k=-1|x,\omega) => \hat k = 1
+<      => \hat k = -1
+
+if we are considering the log of the proabilities:
+\ln \frac{P(k=1|x,\omega)}{P(k=-1|x,\omega)} = \omega^T x
+= \sum_{j=1}^P \omega_j x_j (+\omega_0)
+
+i don't have to always write +\omega_0, for convenience, just changes in the
+problem that have no influence.
+
+In general, I want to define a more relevant model.
+
+Let's call:
+y=P(k=1|x,\omega).
+\ln (\frac{y}{1-y}) = \omega^T x
+
+\frac{y}{1-y} = \exp (\omega^T x)
+thus y = e^{\omega^T x} (1-y)
+therefore y(1+e^{\omega^T x}) = e^{\omega^T x}
+
+y = \frac{e^{\omega^T x}}{1+e^{\omega^Tx}} = \frac{1}{1+e^{-\omega^T x}}
+
+P(k|x,\omega) = \frac{1}{1+e^{-k\omega^T x}}
+
+\mathcal{L}(\omega) = \frac{1}{N} \sum_i \ln P(k_i |x_i,\omega) MLE
+if i replace P by its form:
+
+\mathcal{L}(\omega) = - \frac{1}{N} \sum_i \ln (1 + e^{-k_i \omega^T x_i})
+
+Essentially, the idea was to apply the maximum likelihood. I had to make 
+hypothesis on the general form of the model. Once I do this, I
+end up with this function. The different with the one above:  minus sign.
+not surprising: a likelihood we want to maximise, and not error we want to
+minimize.
+
+\max_\omega \mathcal{L}(\omega) <=> \min_\beta L(\beta)
+
+in neural networks,
+
+fig11
+
+u = \sum_{j=1}^p \omega_j x_j = \omega^T x is called the activation.
+
+several inputs, and one output based on this.
+if u>0, then I have output y=1.
+if u<0, then y=0.
+
+in the context of neural networks, people prefer work with 0 and 1 rather than
+\pm 1.
+
+neuron is a classifier
+
+fig11
+
+y = \phi (u)
+
+\phi (u) = \frac{1}{1+e^{-u}}
+essentially, what we do, is considering the different inputs with different
+weights.
+At the end, we will end with more complex classifier models. this one is very
+elementary.
+there are very simple algorithms, like the gradient descent.
+
+
+let's start again with the log likelihood:
+
+\mathcal{L}(\omega) = \frac{1}{N} \sum_i (k_i \ln y_i + (1-k_i) \ln(1-y_i))
+ = \frac{1}{N} \sum_i \ln P (k_i | x_i,\omega)
+
+y_i = P(k_i =1 |x,\omega)a
+
+ln(P(\ldots)) = y_i if k_i = 1
+= 1-y_i if k_i = 0.
+
+then we make the model by assuming:
+
+y_i = \phi (u_i) where u_i = \omega^T x_i = \sum_{j=1} \omega_j x_{ij}
+now, we want to compute the gradient.
+it means to compute the derivative of the log likelihood:
+
+\frac{\partial \mathcal{L}}{\partial \omega_j} = \frac{1}{N} \sum_i (k_i \frac{1}{y_i} \frac{\partial y_i}{\partial\omega_j} - (1-k_i)
+\frac{1}{1-y_i}) \frac{\partial y_i}{\partial \omega_j}
+
+with (\ldots) = \frac{ k_i (1-y_i) - (1-k_i)y_i}{y_i (1-y_i)} = \frac{k_i - y_i}{y_i (1-y_i)} 
+
+and \frac{\partial y_i}{\partial \omega_j} = \phi'(u_i) \frac{\partial u_i}{\partial \omega_j} = \phi'(u_i) X_{ij}
+
+thus
+\frac{\partial \mathcal{L}}{\partial\omega_j} = \frac{1}{N} \sum_i \frac{\phi'(u_i)}{\phi(u_i) (1-\phi(u_i))} (k_i - y_i) x_{ij}
+
+\phi (u) = \frac{1}{1+e^{-u}} => \frac{\phi''}{\phi (1-\phi)} = 1.
+
+\frac{\partial \mathcal{L}}{\partial \omega_j} = \frac{1}{N} \sum_i (k_i - y_i) x_{ij}
+
+for neural networks, the same idea as gradinet descent is called backpropagation
+, but it is a bit more complicated.
+
+fig 2.1: representation of classification.
+
+support vector machine : SVM
+problem formally attitred: \min_\omega \sum_i \max(0,1-k_i \omega^T x_i ) + \lambda ||\omega||^2.
+
+the exercise is trying to find what this function is doing.
+
+standard linear regression: take care about the distance to the line.
+when doing SVM: introducing some margin of errors.
+this approach would count as an error even if we are on the right side of the
+line but close to it.
+we're not going to explain it here, but it looks very much linke the other frameworks.
+
+another approach:
+linear discriminant analysis (LDA)
+
+we take a model (probabilistic), more gaussian like. the objective function is
+to fit two classes by the gaussian, in such a way we maximise the distance
+between the gaussians, and minimise the variance of the gaussians.
+that can easily be done with linear algebra.
+
+there are many other methods on the same lines.
+
+Now we want to be able to adress the problem of non linear separability.
+where the real boundary would be a circle.
+in and out.
+
+fig12
+
+we can also do this locally.
+
+it is called k-nearest neighbours
+
+again, let's start with a batch of values:
+fig13
+
+we are given with a particular point, and say if it is red or blue.
+what are the neighbours doing?
+
+if k=3, i am looking at the three nearest points, and then take the colour of
+the majority.
+
+mathematically, it can be written as:
+
+\hat y(x)  = \frac{1}{k} \sum_{i\in N_k(x)} y_i
+
+N_k(x) is the set of k nearest neighbours to x
+y_i \in \{0,1\}
+
+Again, we can be in a situation described by fig 14.
+we have, there, a decision boundary. i'm deciding what is the coulour of the
+nearest points with that boundary.
+
+fig 2.2 and 2.3. variations of K
+
+now the question is: what should we take for K
+
+\frac{N}{k} \sim p : number of degrees of freedom.
+
+
+fig 15
+
+figure slide: 'selection of K': using 10,000 datapoints and tested with 200.
+
+minimal training error if we take k=1. very complicated thing.
+as we are taking larger and larger values of k, we are averaging and get more
+errors, even in the training set.
+if we have too few degrees of freedom, we are completely missing the structure
+of data.
+it is also not good if we have too many degrees of freedom.
+
+15 is relatively well located in this area.
+between 20 and 10, there's not that much difference, maybe 10 is better
+because it uses less resources.
+we have to pick the right model, and there are models of different levels of
+complexity.
+different values of k that can be used.
+
+there is nothing into this algorithm, but also nothing trivial in finding the right datapoints.
+
+there are many variations along this method.
+in this example, we are taking the same density of points, everywhere. but if I take any point, it doesn't mean anything to take just three points
+randomly.
+we may take into account the distance between the points.
+essentially, we would average around the point that are close to the considered
+point. more generally, we can do it with a hard cutoff close/far or smooth
+cutoffs.
+
+\hat y(x) = \frac{\sum_i K_\lambda (x,x_i)y_i}{\sum_i k_\lambda (x,x_i)}
+
+K_\lambda (x,x_i) = \frac{1}{\lambda} e^{-\frac{||x-x'||^2}{2\lambda}}.
+
+or K_\lambda (x,x_i) = 1 if ||x-x'||<\lambda, 0 otherwise.
+
+kernel methods also posisble.
+if we do this, it is also a case where we have one parameter: \lambda. It plays
+the same role.
+big lambda: averaging a lot.
+we would reduce the variance, but with a too large bias.
+in the opposite: reduce the bias would end in a too large variance.
+
+again, there are variety of methods that can be used. one way to see this
+problem of classification is to fit a function.
+let's say, zero for orange points, 1 for blue points.
+
+At one dimension, we would have
+fig 16.
+
+maybe there could be errorsa
+
+the thing is that we may smooth all those functinos.
+we may think about these problems as fitting problems. correcting locally
+the errors of the functions.
+
+kernel method smoothing, to locally have something smoother.
+what these things are doing is similar to the problem of smoothly inferring a
+function from just any perfect observation.
+
+This is very simple, but the problem is that none of those things are working
+for big data. issue of classifying dogs and cats.
+
+If we go in any of those methods, there is no way we can succeed. Several
+problems, the greatest is a geometrical one:
+the curse of dimensionality.
+
+essentially, it has to do with all the assumption we have about neighbourhoods
+are false when we are working with high dimensional spaces.
+
+example in 2D in fig 17.
+
+volume is scaling as power p of the radius. V = \alpha_p r^p.
+
+If we look at \frac{V}{V_{tot}} = \left( \frac{r}{r_{tot}} \right)^p
+then we have 
+\frac{r}{r_{tot}} = \left( \frac{V}{V_{tot}} \right)^{1/p}
+
+If the ratio V/Vtot = 0.01.
+if we take something like p=10, we'll see that r/rtot = 0.6.
+
+if we want to cover even a very small fraction of the volume, we have to go very
+far from the point.
+ridiculous amount of the volume.
+the problem of scaling with the radius is not interesting.
+in high dimensional spaces, all the volume is close to the centre.
+
+to cover a small fraction of the volume, we have to go very far.
+
+All the ideas of closest neighhbourgs cannot be used in high dimensionality
+spaces.
+
+we can also reduce the dimensionality of the data. that is the first approach
+with this problem.
+solutions:
+\begin{itemize}
+    \item reduce dimensionality -> PCA (unsupervised)
+    \item representation, that has to do with what kind of space we are woking with. we have to imagine that we have all the pictures of cats and
+        dogs, all put in the same place.
+        something invariant with translation, rotation, etc. so this will be seen in another lecture, about neural networks. essentially, one
+        class of netwkrs: convolutional, is based on this. chose the right space
+        in which it is easy to chose the classification.
+\end{itemize}
+
+exam
+In priciple, everything should be comprised in the lecture.
+code it ourself. not using things already written. the game here is to write
+ourself our own libraries. it is not very complicated, each question is just
+a few lines of code.
+
+
+
+
 
 \chapter{Unsupervised learning: clustering, K-means, hierarchical}
 \label{ch:unsupervised-2}
