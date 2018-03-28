@@ -67,6 +67,9 @@ December\fi\space\number\year
 \newcommand{\E}{\mathrm{E}}
 \newcommand{\var}{\mathrm{Var}}
 \newcommand{\cov}{\mathrm{Cov}}
+\newcommand{\half}{\frac{1}{2}}
+\newcommand{\nth}{\frac{1}{N}}
+\newcommand{\sumin}{\sum_{i=1}^N}
 
 % Generates the index
 \usepackage{makeidx}
@@ -98,8 +101,9 @@ December\fi\space\number\year
 \cleardoublepage
 \chapter*{Introduction}
 
-I have spartialed writing this handout from the notes I have taken from Olivier Rivoire's course on
-Big Data and Statistical learning at \pc{} from May to April 2018. 
+I have started writing this handout from the notes I have taken from
+Olivier Rivoire's course on Big Data and Statistical learning at \pc{} from
+March to April 2018. 
 Please be considerate if some mistakes crop up in this work.
 
 \emph{Julien}
@@ -121,7 +125,8 @@ olivier.rivoire@college-de-france.fr\\
 
 \section*{Applications}
 
-There are plenty of applications for Big Data problems. A few examples may be given:
+There are plenty of applications for Big Data problems. A few examples may be
+given:
 \begin{description}
     \item[Post] learn + identify digits on enveloppes
     \item[Biology] DNA sequencing
@@ -129,8 +134,9 @@ There are plenty of applications for Big Data problems. A few examples may be gi
     \item[etc.]
 \end{description}
 
-Big Data is an issue of growing importance. As engineers, we may be familiar with such concepts.
-\section*{Idea of marchine learning} 
+Big Data is an issue of growing importance. As engineers, we may be familiar 
+with such concepts.
+ \section*{Idea of marchine learning} 
 
 The main idea of machine learning is to find models to give prediction of input data.
 In facts, Big Data models are deduced from a training batch of N input-output
@@ -141,14 +147,15 @@ the training batch.
 
 
 
-Analyticall, let's spartial with a collection of $x$ and $y$ data, where $x$ stands
-for the input data and $y$ is the vector of the output data.
+Analytically, let's start with a collection of $x$ and $y$ data, where $x$ 
+stands for the input data and $y$ is the vector of the output data.
 Each sample is going to have multiple dimensions, therefore we may use an
 algebraic model. Let $N$ be the number of samples used and p the dimension of
 each $x$ data. We may write x as an $N,p$ matrix and $y$ as a vector of $p$
 dimensions.
 
-We now N samples of p dimensions $x_{ij}$ associated with the N output data $y_i$.
+We now N samples of p dimensions $x_{ij}$ associated with the N output data
+$y_i$.
 
 From now on there are two possible cases: $y_i$ can be known or unknown.
 In the fist case ($y_i$ known), the problem is said to be \emph{supervised}.
@@ -164,18 +171,18 @@ solved via \emph{clustering} or \emph{dimension reduction} methods.
 \section*{Deep learning}
 
 In the past few years, there have been huge progress in the \emph{deep learning}
-approach. It is based on so-called neurol networks, that are models inspired
+approach. It is based on so-called neural networks, that are models inspired
 by the brain operation.
 
 People are trying to understand how to train these networks. It has had
 remarkable outcomes in image recognition, social network filtering, medical
 diagnoses, etc.
 
-Deep learning is based on hidden layers, placed inbetween input and output layers
-, that are trained to find correlations and mathematical models.
+Deep learning is based on hidden layers, placed inbetween input and output
+layers, that are trained to find correlations and mathematical models.
 
 The goal of this course is to explain whate these objects are, how do they work,
-and put it in relation with state of thepartial research.
+and put it in relation with state of the art research.
 
 What kind of open problems are there? How do neural networks operate? What are
 their unsuperised learning behaviour?
@@ -190,30 +197,31 @@ their unsuperised learning behaviour?
 
 \section{Linear Regression at One Dimension}
 
-Let $p =1$. If we work with N points, then $i=1,\cdots,N$, and we work with a
-set of data $(x_i,y_i)$.
+Let us work at one dimension: $p =1$. If we work with N points, then
+$i=1,\cdots,N$, and we work with a set of data $(x_i,y_i)$.
 
 The goal here is to make a prediction of what the $y$ data should be when $x$ is
 given.
 
 The simplest possible model is the linear regression given by the equation 
 \ref{linear1D}.
+
 \begin{equation}
     y=\alpha + \beta x.
     \label{linear1D}
 \end{equation}
-Here, the main issue is to get the best $\alpha$ and $\beta$ for a partialicular set
-of data. To know what the best choice is, we may define a cost function, that
-returns a number representing how well the regression permorms. In neural network
-problems, the cost fuction return number is associated with how well the neural
-network performs in mapping training examples to the correct output.
+Here, the main issue is to get the best $\alpha$ and $\beta$ for a partialicular
+set of data. To know what the best choice is, we may define a cost function,
+that returns a number representing how well the regression permorms. In neural
+network problems, the cost fuction return number is associated with how well the
+neural network performs in mapping training examples to the correct output.
 
 There are several choices that can be made to define the cost function. At one
 dimension, the simplest choice is the sum of squared residuals, defined in
 equation \ref{SSR}, usually shortened as SSR.
 
 \begin{equation}
-    l(\alpha,\beta) = \frac{1}{N} \sum_{i=1}^N (y_i - \alpha - \beta x_i )^2
+    l(\alpha,\beta) = \nth \sumin (y_i - \alpha - \beta x_i )^2
     \label{SSR}
 \end{equation} 
 
@@ -221,16 +229,17 @@ Figure \ref{fig1} illustrate a simple geometrical interpretation of what the SSR
 is. Actually, the lower $\epsilon_i$, the better the fit.
 
 \begin{marginfigure}
-\TODO
-\caption{geometrical intepretation of the SSR, where $\epsilon_i$ is given by the relation: $\epsilon_i^2 = (y_i - \alpha - \beta x_i)^2$}
-\label{fig1}
+    \TODO
+    \caption{geometrical intepretation of the SSR, where $\epsilon_i$ is given
+        by the relation: $\epsilon_i^2 = (y_i - \alpha - \beta x_i)^2$}
+    \label{fig1}
 \end{marginfigure}
 
 For all we have done up to now, we never have never worked with big data. We
 need $p$ large enough to consider this as a real big data issue.
 
-If we’re looking at a hundreds or thousands pixels picture composed of hundreds, 
-$p$ will be large in comparison with $N$. That is a full statistics problem.
+If we’re looking at a hundreds or thousands pixels picture, $p$ will be large
+in comparison with $N$. That is a full statistics problem.
 
 Currently, $p=1$ is small data, but all we did there has been a correct
 introduction to clearly understand big data problems.
@@ -241,17 +250,18 @@ of $l$ versus $\alpha$ and $\beta$ vanishes. This is given by equations
 \ref{derlalpha} and \ref{derlbeta}.
 
 \begin{eqnarray}
-    \frac{\partial l}{\partial \alpha} & = & - \frac{1}{N} \sum_{i=1}^N (y_i - \alpha - \beta x_i) = 0
+    \frac{\partial l}{\partial \alpha} & = & - \nth\sumin (y_i - \alpha - \beta x_i) = 0
     \label{derlalpha}\\
-    \frac{\partial l}{\partial \beta} & =&  -\frac{1}{N} \sum_{i=1}^N x_i (y_i - \alpha -  \beta x_i) = 0
+    \frac{\partial l}{\partial \beta} & =&  -\nth\sumin  x_i (y_i - \alpha -  \beta x_i) = 0
     \label{derlbeta}
 \end{eqnarray}
 
 To solve this set of equations, we require a substitution for $x$ and $y$.
 
-Let’s define the mean values\footnote{We must keep in mind that $\overline{x^2} \neq \bar{x}^2$.}:
+Let’s define the mean values:
+\marginnote{We must keep in mind that $\overline{x^2} \neq \bar{x}^2$.}
 \begin{eqnarray}
-    \bar{x} & = & \frac{1}{N} \sum_{i=1}^N x_i\\
+    \bar{x} & = & \nth\sumin x_i\\
     \bar{y} & = & \frac{1}{N} \sum_{i=1}^N y_i\\
     \overline{xy} & =&  \frac{1}{N} \sum_{i=1}^{N} x_i y_i\\
     \overline{x^2} & =&  \frac{1}{N} \sum_{i=1}^N x_i^2
@@ -294,7 +304,8 @@ There we may substitute $\alpha$ and $\beta$:
 \end{eqnarray*}
 
 
-Let us define the Pearson coefficient $\mathcal{R}$ by the relation \ref{pearson}.
+Let us define the Pearson coefficient $\mathcal{R}$ by the relation
+\ref{pearson}.
 \begin{equation}
     \mathcal{R} = \frac{\cov(x,y)}{\sigma(x) \sigma(y)}
     \label{pearson}
@@ -344,11 +355,11 @@ becomes a vector of p dimensions, as presented in equation \ref{pdim}
 \end{equation}
 
 Let now $x_{i,j}$ be the matrix of the input data, where $i$ is the number of
-samples, varying from 1 to $N$, and $j$ is the dimension, ranged between 1 to $p$
-.
+samples, varying from 1 to $N$, and $j$ is the dimension, ranged between 1 to
+$p$.
 
-We may generalise the relation $\hat{y_i} = \hat{\alpha} + \hat{\beta}x_i$ in the
-new \ref{gen2} equation: 
+We may generalise the relation $\hat{y_i} = \hat{\alpha} + \hat{\beta}x_i$ in
+the new \ref{gen2} equation: 
 
 \begin{equation} 
     \hat{y_i} = \hat{\alpha} + \sum_{j=1}^p \hat{\beta_j} x_{ij}
@@ -448,46 +459,73 @@ discriminating between datasets without having the aforesaid issues.
 \chapter{General principles}
 \label{ch:general-principles}
 
-Models, bias vs variance, cross-validation, maximum likelihood, Bayes, etc.
+\begin{itemize}
+    \item Models
+    \item bias vs variance
+    \item cross-validation
+    \item maximum likelihood
+    \item Bayes
+    \item etc.
+\end{itemize}
 
 
-So, what do we do now?
-In general, we want to know what are the most interesting parameters. At the end, we can predict the issue with one or two parameters. Even if we spartial with a lot of data, we want to find what are the parameterts, the dimensions important in the problem we are working on.
+Generally, big data issues are composed of many parameters, with which it is
+energy-consuming. We usually want to reduce the problems to one or two
+interesting parameters. Even if start with a lot of data, we would need to find
+what are those interesting parameters, and what are the important dimensions of
+the problem we will be working on.
 
-Two advantages:
+There are two advantages at reducing the number of parameters:
 \begin{description}
-\item[Interpretation]
-With less parameters, we can estimate them with much more accuracy than if we have more.
-In general, it’s easier and more accurate to estimate things on a condensed set of parameters than on a large set.
-The issue is: how do you compromise: having enough parameters to have a good enough estimation of the problem, without having too much and loosing precision. Enough information VS enough precision.
+    \item[accuracy] With less parameters, we can estimate them with much more
+        accuracy;
+    \item[easiness] it is always easier to estimate things on a condensed set
+        of parameters.
 \end{description}
+
+Hence the issue is to find a compromise between having enough parameters to
+estimate properly the result of the problem, without loosing precision when
+having a too large batch.
+
+\marginnote{Here $||\cdot||_0$ stands for the cardinal: $||\beta||_0 = \#(\beta_j \neq 0)$}
 
 Let $\tilde{l}(\beta)$ be defined as:
 \begin{equation}
-\tilde{l}(\beta) = l(\beta) + \lambda ||\beta||_q
+    \tilde{l}(\beta) = l(\beta) + \lambda ||\beta||_q
 \end{equation}
-With $||\beta||_0 = \#(\beta_j \neq 0)$ (cardinal)
 
-We look for $min_\beta l(\beta)$ given $||\beta||_0 \leq C$
+Now, the problem lays in finding
+\begin{equation}
+    \min_\beta l(\beta) \; \text{given} \; ||\beta||_0 \leq C
+    \; \text{with} \; \beta = [0, \ldots, \beta_i, 0, \ldots, 0]
+\end{equation}
 
-With $\beta = [0, \cdots, \beta_i, 0, \cdots, 0]$
-There ain’t any good numerical solution.
-
-There’s always a compromise between what we are able to optimise efficiently, and what is possible to optimise. A version of the problem that is easy to solve is:
+It is not possible to provide this kind of problem with any good numerical
+solution. In fact, we would always try to find a compromise between what we are able to optimise efficiently and what is possible to optimise. We can
+write the problem in a new version, easier to solve:
 
 \begin{equation}
-min_\beta l(\beta)  given ||\beta||_2 \leq C_1
+    \min_\beta l(\beta) \; \text{given}\; ||\beta||_2 \leq C_1
 \end{equation}
 
-Ridge regression: there’s a way to get to this problem, using the constraints that can be solved efficiently numerically.
+\section{The two models}
 
-Or $\min_\beta l(\beta)$, given $||\beta||_1 \leq C_2$. This is called the Lasso regression.
+There are two models that can be used to solve that kind of problem. The first
+is the \emph{Ridge regression} that consists in using the constraints that can
+be solved efficiently numerically.
 
-In the ridge problem, we assume that the problem is sparse: we only need a few parameters to capture the relationship.
+The second model is called the \emph{Lasso regression} and consists in finding:
+
+\begin{equation}
+    \min_\beta l(\beta) \; \text{given} \; ||\beta||_1 \leq C_2
+\end{equation}
+
+In the ridge problem, we assume that the problem is sparse: we only need a few
+parameters to capture the relationship.
 
 Why did we spartial to write it this way?
 
-\begin{equation}
+\begin{equation} 
 \tilde{l}(\beta) = (Y -X\beta)^T (Y-X\beta) + \lambda \beta^T \beta
 \end{equation}
 
@@ -747,8 +785,6 @@ In general, the best solution is not the solution that has no bias.
 I will estimate better the parameters that I have with a constrained set of data.
 
 
-\chapter{Supervised learning: classificaton, regression, nearest neighbours}
-\label{ch:supervised-learning}
 
 last time, we learnt unsupervised learning.
 $(x,y)_{i=1\cdots N}$
@@ -772,7 +808,7 @@ itself.
 we consider a class of problems, described with a parameter $\lambda$.
 we introduce $\lambda$ as a parameter of regularisation.
 
-\marginnotes{we are difining, for example, the error as:
+\marginnote{we are defining, for example, the error as:
 \begin{equation*}
     l(\beta,\lambda) = \frac{1}{N}\sum_{i=1}^N (y_i - \beta x_i)^2 - \lambda ||\beta||_0
 \end{equation*}
@@ -806,7 +842,7 @@ $\epsilon \~ N(0,\sigma^2)$
 
 The probability to see x with theta:
 \begin{equation}
-P(y|x,\theta) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp - \frac{(y-f(x,\theta))^2}{2\simga^2}
+    P(y|x,\theta) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp - \frac{(y-f(x,\theta))^2}{2\sigma^2}
 \end{equation}
 
 \begin{marginfigure}
@@ -820,11 +856,11 @@ the best parameter $\hat \theta$.
 We look at the parameter that make the data the most likeable.
 
 \begin{eqnarray}
-\mathcal{L} (\theta|\Z_1,\cdots,Z_n) & =&  \log P(Z^N|\theta)\\
-& = & \sum_{i=1}^N \log P(Z_i|\theta)\\
-&=& \sum_{i=1}^N \left[ -\half \log (2\pi\sigma^2) - \frac{1}{2\sigma^2} (y_i - f(x_i,\theta))^2 \right]\\
-& = & - \frac{N}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}{N} (y_i -f(x_i,\theta))^2 \\
-&=& -\frac{N}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} l(\theta)
+\mathcal{L} (\theta|Z_1,\cdots,Z_n) & = &  \log P(Z^N|\theta)\\
+    & = & \sum_{i=1}^N \log P(Z_i|\theta)\\
+    & = & \sum_{i=1}^N \left[ -\half \log (2\pi\sigma^2) - \frac{1}{2\sigma^2} (y_i - f(x_i,\theta))^2 \right]\\
+    & = & - \frac{N}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}{N} (y_i -f(x_i,\theta))^2 \\
+    &=& -\frac{N}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} l(\theta)
 \end{eqnarray}
 
 MSE
@@ -1195,8 +1231,8 @@ and because the problem is convex, we're going to converge to the single minimum
 
 On wednesday, we will see single classification.
 
-\chapter{Unsupervised learning: dimensionality reduction, PCA, SVD}
-\label{ch:unsupervised-1}
+\chapter{Supervised learning: classificaton, regression, nearest neighbours}
+\label{ch:supervised-learning}
 
 regression = supervised learning for quantitative data.
 
@@ -1700,6 +1736,8 @@ good, we might think about it from ourselves.
 
 
 
+\chapter{Unsupervised learning: dimensionality reduction, PCA, SVD}
+\label{ch:unsupervised-1}
 \chapter{Unsupervised learning: clustering, K-means, hierarchical}
 \label{ch:unsupervised-2}
 
