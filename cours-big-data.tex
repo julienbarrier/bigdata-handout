@@ -10,6 +10,7 @@
 \newcommand{\pc}{ESPCI Paris}
 \newcommand{\thesubtitle}{Statistical \& Machine Learning}
 
+\usepackage{hyperref}
 \usepackage{microtype}
 \usepackage{textcase}
 \usepackage{booktabs}
@@ -104,9 +105,13 @@ December\fi\space\number\year
 
 I have started writing this handout from the notes I have taken from
 Olivier Rivoire's course on Big Data and Statistical learning at \pc{} from
-March to April 2018. 
+March to April 2018. The \LaTeX ~sources of this document can be found on
+\href{https://github.com/julienbarrier/bigdata-handout}{Github}. Do not hesitate
+to update it if you feel it necessary.
+
 Please be considerate if some mistakes crop up in this work.
 
+\vspace{.5cm}
 \emph{Julien}
 \vspace{1cm}
 
@@ -770,7 +775,7 @@ with the cost ($c_q$).
 We can repeat for different values of the cost.
 If we do it for large $C$, we do not put any constraints, and therefore get the same $\beta$.
 
-If we put a very strong cost, like 0, the only solution is $\beta = 0$.
+If we put a very strong cost, like $0$, the only solution is $\beta = 0$.
 Hence we’re looking at different solutions, constrained, and then we relax it to
 a state where there’s no constraint anymore.
 
@@ -802,112 +807,167 @@ $l_1$ constraint, as shown on figure \ref{sparsity}.
     \label{sparsity}
 \end{figure}
 
-
+\TODO: introduction à cette équation.
 \begin{equation}
     y=F(x,\theta).
 \end{equation}
 
-Linear models:
+Linear models yield to:
 \begin{equation}
-F(x,\theta) = \sum_{j=1}^p \theta_j x_j
+    F(x,\theta) = \sum_{j=1}^p \theta_j x_j
 \end{equation}
 
-The principle is to have the results of p data, and then once we get another dataset, similar to the previous one, we’re able to fit it and to find the solution.
+The principle hire is to have the results of $p$ data, and then, once we get 
+another dataset -- similar to the previous one -- we will be able to fit it and
+to find the solution:
 \begin{equation}
-x_1, \cdots x_p, x_1^2, \cdots, x_p^2, \cdots cos x_1, \cdots
+    x_1, \cdots x_p, x_1^2, \cdots, x_p^2, \cdots cos x_1, \cdots
 \end{equation}
 
 \begin{equation}
-F(x, \theta) = \sum \theta_j h_j(x)
+    F(x, \theta) = \sum \theta_j h_j(x)
 \end{equation}
 
-Later on, we’lll see neural networks. There, the function h people are generally using is:
-$h_j(x) = \frac{1}{1 + \exp (-\omega_j^T x )} \omega_j$ is the weight. We’ll see this later.
-
--> There’s a relation between x and y.
-There’s no limit to the complexity of the problem we can take.
-
-Loss function $L (y, F(x, \theta)) = (y-F(x,\theta))^2$.
-
-Training error: $err_{training}$ given a model and given a loss function:
-\begin{equation}
-err_{training} = \frac{1}{N} \sum_{i=1}^N L (y_i, F(x_i,\theta))
-\end{equation}
-
-This is not the only quantity we want to consider.
-test/generalisation error. This one would be the error we get when we are using these datapoint that have not been used in the training of the problem.
-
-There’s the training set, used to learn the parameters, and the additional data, on which we’re going to apply the model, and to try to generalise the data that have been used as an input for the fit.
+Later on, we will introduce neural networks. In this case, the function people
+are more familiar with will be:
 
 \begin{equation}
-Err_{test} = \frac{1}{N’} \sum_{i=1}^{N’} L(y_i’,F(x_i’,\theta))
+    h_j(x) = \frac{1}{1 + \exp (-\omega_j^T x )}
 \end{equation}
 
-Plot in slides: training vs test errors.
+Where $\omega_j$ is the weight that adjusts the coefficients.
 
-The objective is not to get the best fit, but to generalise the given data.
+Here, it becomes clear that there is a relation between $x$ and $y$. Considering
+this, there is now no limit to the complexity of the problem we can take.
 
-procedure: K-fold cross-validation. 
-We would divide the data in 5 datasets, and then, take 1 out to use as the test, and all the other one as training test. 
-And then we repeat for all the other combinations. Divide data in K=5 or 10, use most of the data to train, and use one set to test.
+At this stage it becomes necessary to define a loss function $L$. This can be
+written as in equation \ref{lossfunc}.
 
-Data set is splitted in:
+\begin{equation}
+    L (y, F(x, \theta)) = (y-F(x,\theta))^2
+    \label{lossfunc}
+\end{equation}
+
+With any given model and loss function, we need to define a training error
+$\varepsilon_{train}$, as shown in equation \ref{trainerr}.
+\begin{equation}
+    \varepsilon_{train} = \nth \sumin L (y_i, F(x_i,\theta))
+    \label{trainerr}
+\end{equation}
+
+The training error is of utter importance. However, this will not be the only
+quantity we will have to consider.
+In fact, there is also a test/generalisation error. This one would be the error
+we get when we are using these datapoint that have not been used in the training
+of the problem.
+
+There’s the training set, used to learn the parameters, and the additional data,
+on which we’re going to apply the model, and to try to generalise the data that
+have been used as an input for the fit.
+
+\begin{marginfigure}
+    \includegraphics{./Figures/traintesterror.png}
+    \caption{Training vs test errors}
+    \label{traintesterrors}
+\end{marginfigure}
+
+\begin{equation}
+    \varepsilon_{test} = \frac{1}{N’} \sum_{i=1}^{N’} L(y_i’,F(x_i’,\theta))
+\end{equation}
+
+Let's plot the training error $\varepsilon_{train}$ in comparison with the test
+error $\varepsilon_{test}$ on figure \ref{traintesterrors}. The test errors have
+been traced in red while the training errors have been traced in blue.
+
+
+Our objective here is not to get the best fit, but to generalise the given data.
+
+The procedure we will chose is called \emph{k-fold cross validation}. It
+consists in dividing the data in 5 datasets and then take one out of these to
+be used a the test, and all the others as the training sets.
+This is then repeated for all the other combinations. The data are divided in
+$K=5$ or $10$ and then most of the data are used to train the algorithm, while
+the last set of data is used to test the algorithm.
+
+In this procedure, the data set is splitted in:
 \begin{itemize}
-\item training set (for the fit)
-\item test set (for model selection)
-\item Validation set (for assessment)
+    \item training set (for the fit) (\eg 50\% of the data)
+    \item test set (for model selection) (\eg 25\% of the data)
+    \item validation set (for assessment) (\eg 25\% of the data)
 \end{itemize}
 
-Typical number would be : 50\%,25\%,25\%.
+This is used to better understand how to find the best parameters leading to the
+best fit.
 
-We use this to understand ho to find the best parameters.
+Let's take our previous example:
+\begin{equation}
+    y=F(x)
+\end{equation}
 
-$y=F(x)$
+The training set may be described as: $\hat{\theta}$
 
-Training set: $\hat{\theta}$
+The model is $y=F(x,\theta)$
 
-Model $y=F(x,\theta)$
+Thus we have $y= \hat{F}(x) = F(x,\theta)$.
 
-Thus we have $y= \hat{F}(x) = F(x,\theta)$
-
-Another dataset:
+Now, let's work with another dataset:
 
 $x_0$
 \begin{equation}
-\E [(F(x_0) - \hat{F}(x_0) )^2]
+    \E [(F(x_0) - \hat{F}(x_0) )^2]
 \end{equation}
+ 
+Here, $\hat F$ is the prediction.
 
-Where $\hat(F)$ is the prediction.
-
-This is considered over different training sets. It says how far I am from the value I want to get the prediction.
+This is considered over different training sets. It says how far we are from the
+value we want to predict.
 
 \begin{equation}
-\E[] = F(x_0)^2 - 2F(x_0) \E (\hat{F}(x_0)) + \E (\hat{F}(x_0)^2)
+    \E[(F(x_0) - \hat{F}(x_0) )^2] = F(x_0)^2 - 2F(x_0) \E (\hat{F}(x_0)) + \E (\hat{F}(x_0)^2)
 \end{equation}
+
 Where $\E (\hat{F}(x_0)^2)$ is $\var(\hat{F}(x_0) + (\E[\hat{F}(x_0)])^2$
 
-i.e. $\E[] = (F(x_0) - \E[\hat{F}(x_0)]^2 + \var(\hat{F}(x_0))$.
+\ie $\E[(F(x_0) - \hat{F}(x_0) )^2] = (F(x_0) - \E[\hat{F}(x_0)]^2 + \var(\hat{F}(x_0))$.
 
-Test error = $(bias)^2$ + variance
+The test error may be written as the sum of the variance and the square of 
+the bias.
 
-We can generalise this when there is some noise $\epsilon$ (random variable) :
 \begin{equation}
-y = F(x) + \epsilon
-\end{equation} 
-There we will add another parameter : $var(y)$ that is irreducible error.
-
-In the context of linear regression, there’s the Gauss-Markov theorem.
-It tells us that in linear regression, all the estimators that have no bias, the best one is the one that is minimising the loss function
-\begin{equation}
-L(y,F(x)) = (y-F(x))^2
+    \varepsilon_{test} = bias^2 + \var
 \end{equation}
-This theorem is telling us that if we’re interesting in minimising the bias in the context of linear regression we should take $min_\beta l(\beta)$
 
-No bias + min var => $min_\beta l(\beta)$.
+
+This can be generalised with the addition of a random variable $\epsilon$
+designating some noise:
+
+\begin{equation}
+    y = F(x) + \epsilon
+\end{equation} 
+
+Here it becomes necessary to add the irreducible error $\var(y)$
+
+In the context of linear regression, one may apply the Gauss-Markov theorem.
+This one tells us that in linear regression, when considering all the estimators
+that have no bias, the best one is the one that minimises the loss function
+presented in equation \ref{lossfunction}. 
+\begin{equation}
+    L(y,F(x)) = (y-F(x))^2
+    \label{lossfunction}
+\end{equation}
+This theorem shows that if one is interested in minimising the bias, in the
+context of linear regression, he should consider $\min_\beta l(\beta)$
+
+The absence of bias and the minimum variance is obtained for
+\begin{equation}
+    \min_\beta l(\beta)
+\end{equation}
+
 In general, the best solution is not the solution that has no bias.
-I will estimate better the parameters that I have with a constrained set of data.
+Hovewer, a better estimation of the parameters can be found when the set of data
+will be constrained.
 
-
+\section{séance suivante}
 
 last time, we learnt unsupervised learning.
 $(x,y)_{i=1\cdots N}$
