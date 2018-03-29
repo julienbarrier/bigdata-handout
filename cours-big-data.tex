@@ -524,21 +524,22 @@ The second model is called the \emph{Lasso regression} and consists in finding:
 In the ridge problem, we assume that the problem is sparse: we only need a few
 parameters to capture the relationship.
 
-Why did we start to write it this way?
+In fact, the problem can be reset by writing:
 
 \begin{equation} 
-\tilde{l}(\beta) = (Y -X\beta)^T (Y-X\beta) + \lambda \beta^T \beta
+    \tilde{l}(\beta) = (Y -X\beta)^T (Y-X\beta) + \lambda \beta^T \beta
 \end{equation}
 
-\begin{equation}
-\frac{\partial \tilde{l}(\beta)}{\partial \beta} = 2 (-X^T(Y-X\beta) + \lambda \beta) = 2 (-X^T Y + (X^TX + \lambda \mathds{1})\beta
-\end{equation}
+\begin{eqnarray}
+    \frac{\partial \tilde{l}(\beta)}{\partial \beta} &=& 2 (-X^T(Y-X\beta) + \lambda \beta)\\
+    & = & 2 (-X^T Y + (X^TX + \lambda \mathds{1})\beta
+\end{eqnarray}
 
-$\mathds{1}$ is the identity matrix.
+\marginnote{$\mathds{1}$ is the identity matrix.}
 
-What is doing is putting constraints. You add constraints and then you can solve mathematically the problem.
+We are here adding constraints to the problem, that will allow us to solve it
+numerically.
 
-On wenesday, we will compare those two regression, and define the framework for machine learning.
 
 \begin{equation}
 C_{jk} \hfill p>N
@@ -555,84 +556,126 @@ C_{jk} = \frac{1}{N} \sum_{i=1}^N x_{ij}x_{ik}
 X_{ij} \hfill  Nxp
 \end{equation}
 
+\TODO
+
 $p>N => C$ is non invertible.\\
 $N = 1, C_{jk} = x_{1j} x_{1k}$\\
 $C = XX^T$ \\
 here, $C$ is of rank 1.
 
-NB : remind that $Z^TZ = ||Z||^2$
-\begin{equation}
+\marginnote{remind that $Z^TZ = ||Z||^2$
+\begin{equation*}
 Z^T y = <Z,y> = \vec{Z}\cdot\vec{y}
-\end{equation}
+\end{equation*}
+}
 
 Mathematically, $rank(C)\leq N$.
-I have too many parametetrs, not enough samples. When I try to solve this linear regression problem, I have too many solutions.
 
-There are issues when p>N, but also when they are of the same order of magnitude.
+This means that there are too many parameters for too few samples. If we try to
+solve this with a linear regression problem, it will give too many solutions.
 
-Example: financial data.
 
-We want to get information from this data, but there’s no label, no y data.
-In general, we don’t take the raw data, but try to find something more adapted to the problem.
-Here, we want to get rid of the $\alpha$ parameter; for this reason, we use the $r_{ti}$ data instead of the $s_i(t)$ parameter.
+Here it is easy to understand that $p>N$ cases give problems. However, because
+we are working with big data, the $p\sim N$ cases also gie rise to problems. We
+would need $p<< N$ to have correct solutions.
 
-Then we define the $x_{ti}$, by substracting the mean and normalising with the standard deviation.
+\section{Unsupervised learning}
+\subsection{Example of financial data}
 
-Therefore, the $x_{ti}$ value has a null mean, and a standard deviation rescaled to 1. Therefore each data vary within the same range.
-
-If we move to the data $C_{ij}$
-
-When we have some data, an important step is to watch it by eye, and try to find correlations.
-If something is obvious to the eye, we’ll try to interpret it with the math. Example: Exxon\&Chevron are strongly correlated, JP Morgan and Bank of America are also strongly correlated.
-Thus, we may suppose that $C_{Ex,Ch} > C_{Ex,JP}$.
-
-In order to analyse the data, we may compute the spectrum. Or see clearly from the definition that the matrix is symmetric, and has all the properties to be diagonalised.
-
-\begin{equation}
-C_{jk}, C_{jj} = 1 ; C_{ij} = C_{ji}
-\end{equation}
-
-Thus we get $\lambda_1, … , \lambda_p$ eigenvalues, and $v_1, … , v_p$ eigenvectors.
+Let's start with stock data, as presented on figure \ref{financialdata}.
 
 \begin{marginfigure}
-\TODO
-\caption{dispersion of the eigenvalues}
-\label{fig2}
+    \includegraphics{./Figures/stock.png}
+    \caption{Stock data used as an example}
+    \label{financialdata}
 \end{marginfigure}
 
-There’s no way that I can have a good estimation of these metrics.
+With these data, we want to extract information. However, y data are not
+labelled. For this reason, we may not use the raw data, but try to find
+something else that better fits with the problem.
 
-$Bottom = control$. They just shuffle the data, make permutation of the values. It is the same stocks. Randomy shuffle the data, to remove all the interesting information (correlation between the different stocks).
+Here, we want to get rid of the $\alpha$ parameter; for this reason, we use the
+$r_{ti}$ data instead of the $s_i(t)$ parameter.
 
-It’s a way to see what kind of correlation we can get just from randomness, in a case where there’s no corraltion from the data.
+Then we define $x_{ti}$, by substracting the mean and normalising with the
+standard deviation.
 
-We can quantify the quantity of noise.
+Therefore, the $x_{ti}$ value has a null mean, and a standard deviation rescaled
+to 1. Hence we have rescaled the problem so that each data vary within the same
+range.
 
-98\% of the eigenvalues are contained in the 1st partial of the data. That is 98\% of noise.
+Now, let's move to the data $C_{ij}$.
 
-Therefore I write:
+\marginnote{NB: When we consider some data, it is usually very important to
+    watch it before trying to compute anything else. Particularly, if something
+    looks obvious to the eye, we need to set it clearly, before trying to
+    interpret it with the math.
+}
+
+Before trying to make anycalculation, we can assume that Exxon and Chevron data
+are strongly correlated, as well as JP Morgan and Bank of America.
+
+Thus, we may suppose that $C_{Ex,Ch} > C_{Ex,JP}$.
+
+In order to analyse the data, we may compute the spectrum. 
+Or see clearly from the definition that the matrix is symmetric, and has all the
+properties to be diagonalised.
+
 \begin{equation}
-C = \sum_{j=1}^p \lambda_j v_j v_j^T
-\end{equation} 
-\begin{equation}
-v_j^T v_k = \delta_j^k
+    C_{jk}, C_{jj} = 1 ; C_{ij} = C_{ji}
 \end{equation}
 
-Random metrics theory: branch of statustical physics, we can compute analytically the shape of the control series. RMT.
-
-$min_x l(x)$ given $g(x)\leq C$\\
-$min_x l(x) + \lambda g(x)$  ; $\lambda \geq 0$.
+Thus we get the eigenvalues: $\lambda_1, … , \lambda_p$, and the eigenvectors
+$v_1, … , v_p$. The dispersion of the eigenvalues is represented on figure
+\ref{fig2}.
 
 \begin{marginfigure}
-\TODO
-\caption{scheme}
-\label{fig3}
+    \includegraphics{./Figures/eigenvaluesdisp.png}
+    \caption{dispersion of the eigenvalues}
+    \label{fig2}
+\end{marginfigure}
+
+The bottom part of the graph presented on figure \ref{fig2} is called the
+control part. Actually, we see that this part comprises mostly noise, and the
+interesting part of the data is the upper part, that describes longer range
+correlations.
+
+The control part just shuffles the data, and is due to permutation of the values
+. If we randomly shuffle the data, to remove all the interesting information
+(correlation between the different stocks), the control part stays the same.
+This is actually a way to see what kind of correlation we can get from just
+randomness, in a case where there is no correlation from the data.
+Thus, we can quantify the degree of noise. Because 98\% of the eigenvalues are
+contained in the 1st part of the data (control), it means that the stock data
+are comprised of 98\% of noise.
+
+Let's write the matrix C as:
+\begin{equation}
+    C = \sum_{j=1}^p \lambda_j v_j v_j^T
+\end{equation} 
+\begin{equation}
+    v_j^T v_k = \delta_j^k
+\end{equation}
+
+Random metrics theory: branch of statistical physics, we can compute analytically the shape of the control series. RMT.
+
+\begin{equation}
+    \min_x l(x) \; \text{given} \; g(x)\leq C
+\end{equation}
+\begin{equation}
+    \min_x l(x) + \lambda g(x) \; \text{with} \; \lambda \geq 0
+\end{equation}
+
+\begin{marginfigure}
+    \TODO
+    \caption{scheme}
+    \label{fig3}
 \end{marginfigure}
 
 
 I assume everything is differentiable.
 \begin{equation}
-\nabla_x l(x) = -\lambda \nabla_x g(x)
+    \nabla_x l(x) = -\lambda \nabla_x g(x)
 \end{equation}
 
 The conditions tells that the two gradients should be aligned, and directed in opposite directions.
@@ -641,7 +684,7 @@ Minimum value., can be a local minimum if the problem isn’t perfectly shaped.
 
 If I have $l(\beta)$, and am considering the norm of $\beta$ to be less that C value:
 \begin{equation}
-||\beta||_q \leq C_q
+    ||\beta||_q \leq C_q
 \end{equation}
 We can do it with $l_0$, $l_2$, sometimes also with the $l_1$ norm.
 
