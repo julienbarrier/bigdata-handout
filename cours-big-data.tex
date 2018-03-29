@@ -879,6 +879,7 @@ Let's plot the training error $\varepsilon_{train}$ in comparison with the test
 error $\varepsilon_{test}$ on figure \ref{traintesterrors}. The test errors have
 been traced in red while the training errors have been traced in blue.
 
+\section{k-fold cross validation}
 
 Our objective here is not to get the best fit, but to generalise the given data.
 
@@ -967,55 +968,58 @@ In general, the best solution is not the solution that has no bias.
 Hovewer, a better estimation of the parameters can be found when the set of data
 will be constrained.
 
-\section{séance suivante}
+\section{bias VS variance}
 
-last time, we learnt unsupervised learning.
-$(x,y)_{i=1\cdots N}$
+\TODO
 
-Goal : learn $x \rightarrow y$. function: theta
-so that when given new $x_i$
+%last time, we learnt unsupervised learning.
+%$(x,y)_{i=1\cdots N}$
 
-$x_i \rightarrow^{predict} \hat{y_i} \sim y_i$
-function: $\hat\theta$
+%Goal : learn $x \rightarrow y$. function: theta
+%so that when given new $x_i$
+
+%$x_i \rightarrow^{predict} \hat{y_i} \sim y_i$
+%function: $\hat\theta$
 
 
-function with two components : $err_{test}$ wich is composed of the bias +
-variance.
-if large amount of data, high variance, very hard to learn, and we get
-very different parameters.
+%function with two components : $err_{test}$ wich is composed of the bias +
+%variance.
+%if large amount of data, high variance, very hard to learn, and we get
+%very different parameters.
 
-we may want to compromise this with a model with less parameters with 
-a lower variance problem.
-not only we want to pick the best variable in the model, but also the model
-itself.
-we consider a class of problems, described with a parameter $\lambda$.
-we introduce $\lambda$ as a parameter of regularisation.
+%we may want to compromise this with a model with less parameters with 
+%a lower variance problem.
+%not only we want to pick the best variable in the model, but also the model
+%itself.
+%we consider a class of problems, described with a parameter $\lambda$.
+%we introduce $\lambda$ as a parameter of regularisation.
 
-\marginnote{we are defining, for example, the error as:
-\begin{equation*}
-    l(\beta,\lambda) = \frac{1}{N}\sum_{i=1}^N (y_i - \beta x_i)^2 - \lambda ||\beta||_0
-\end{equation*}
-}
+%\marginnote{we are defining, for example, the error as:
+%\begin{equation*}
+%    l(\beta,\lambda) = \frac{1}{N}\sum_{i=1}^N (y_i - \beta x_i)^2 - \lambda ||\beta||_0
+%\end{equation*}
+%}
 
-\begin{itemize}
-\item training -> $\hat \theta$ given $\lambda$
-\item validation -> $\hat \lambda$
-\item test -> $Err_{test}$
-\end{itemize}
+%\begin{itemize}
+%\item training -> $\hat \theta$ given $\lambda$
+%\item validation -> $\hat \lambda$
+%\item test -> $Err_{test}$
+%\end{itemize}
 
-At the begining, we divide the dataset into multiple datasetts.
+%At the begining, we divide the dataset into multiple datasetts.
 
-K-fold cross validation : the idea is that we have one dataset, that we divide
-into K subsets. We can get it with statistics. two weeks ago, we've seen an example of this, in the context of linear regression.
-minimising the mean square error
+%K-fold cross validation : the idea is that we have one dataset, that we divide
+%into K subsets. We can get it with statistics. two weeks ago, we've seen an example of this, in the context of linear regression.
+%minimising the mean square error
 
-planning of the day:
-\begin{itemize}
-\item Bayesian approach
-\item how we do the approximation in practice.
-\item example of CLASSIFICATION.
-\end{itemize}
+%planning of the day:
+%\begin{itemize}
+%\item Bayesian approach
+%\item how we do the approximation in practice.
+%\item example of CLASSIFICATION.
+%\end{itemize}
 
+\section{Maximum likelihood}
 First, let's discuss about maximum likelihood estimation.
 This is not a big-data specific approach. general in statistics.
 In general, I would have a model of the form $ y= f(x,\theta)+ \epsilon$
@@ -1069,7 +1073,7 @@ figure parabolle inversée, maximum : courbature $-\partial\mathcal L/\partial \
 
 We want to find the best parameter, \ie the one that is the more likelihood to be \ldots
 
-L is called the log-likelihood. P is colled the likelihood.
+$\mathcal{L}$ is called the log-likelihood. P is colled the likelihood.
 In a sense, we want to find the most likely model.
 
 We can mention, that there are two difficulties :
@@ -1077,6 +1081,8 @@ We can mention, that there are two difficulties :
 \item we need to find the maximum
 \item problem of validation: if we have a more complicated model, we would increase the log likelihood, and no way to do the validation.
 \end{itemize}
+
+\section{Bayesian approach}
 
 Now, another approach: the Bayesian approach. Again, this is not specific to big-data.
 We may know that there are lot of debates in the meaning of probabilities. There
@@ -1115,7 +1121,7 @@ We look at  the model, that also incorporates the prior.
 
 On the slides, one partialicular example of the prior to solve a praticular problem.
 
-
+\section{In practice\dots}
 Here, there's nothing to do with big data. example taken from the book of MacKay
 example: Jo has a test for a disease. a = state of health.
 a=1 if sick, 0 otherwise.
