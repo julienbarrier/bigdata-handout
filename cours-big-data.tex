@@ -594,6 +594,19 @@ With these data, we want to extract information. However, y data are not
 labelled. For this reason, we may not use the raw data, but try to find
 something else that better fits with the problem.
 
+Let the price of stock $i$ at time $t$ be $s_i(t)$. The stock index i can vary
+from 1 to $p=1,000$, and the data are separated with a time interval 
+$\Delta t = \SI{30}{\minute}$. The time variable $t$ ranges from 1 to $N=6228$
+(that represents 2 years).
+
+Let us define the following variables:
+
+\begin{eqnarray}
+    r_{ti} & = &  \ln \frac{s_i(t+\Delta t)}{s_i(t)}\\
+    x_{ti} & = & \frac{r_{ti} - \bar{r}_i}{\sigma(r_i)}\\
+    C_{ij} & = & \nth \sumin x_{ti} x_{tj} 
+\end{eqnarray}
+
 Here, we want to get rid of the $\alpha$ parameter; for this reason, we use the
 $r_{ti}$ data instead of the $s_i(t)$ parameter.
 
@@ -604,7 +617,9 @@ Therefore, the $x_{ti}$ value has a null mean, and a standard deviation rescaled
 to 1. Hence we have rescaled the problem so that each data vary within the same
 range.
 
-Now, let's move to the data $C_{ij}$.
+Now, let's move to the data $C_{ij}$ that represents the correlation between two
+$x_{ti}$ variables. The matrix $C$ of $C_{ij}$ coefficients is of great interest
+in our problem.
 
 \marginnote{NB: When we consider some data, it is usually very important to
     watch it before trying to compute anything else. Particularly, if something
@@ -612,8 +627,8 @@ Now, let's move to the data $C_{ij}$.
     interpret it with the math.
 }
 
-Before trying to make anycalculation, we can assume that Exxon and Chevron data
-are strongly correlated, as well as JP Morgan and Bank of America.
+Before trying to make anycalculation, we can assume that Exxon's and Chevron's
+data are strongly correlated, as well as JP Morgan's and Bank of America's.
 
 Thus, we may suppose that $C_{Ex,Ch} > C_{Ex,JP}$.
 
@@ -657,7 +672,8 @@ Let's write the matrix C as:
     v_j^T v_k = \delta_j^k
 \end{equation}
 
-Random metrics theory: branch of statistical physics, we can compute analytically the shape of the control series. RMT.
+With the random metrics theory (RMT - branch of statistical physics), it is
+possible to compute analytically the shape of the control series:
 
 \begin{equation}
     \min_x l(x) \; \text{given} \; g(x)\leq C
@@ -672,60 +688,123 @@ Random metrics theory: branch of statistical physics, we can compute analyticall
     \label{fig3}
 \end{marginfigure}
 
+We assume that everything is differentiable, therefore:
 
-I assume everything is differentiable.
 \begin{equation}
     \nabla_x l(x) = -\lambda \nabla_x g(x)
 \end{equation}
 
-The conditions tells that the two gradients should be aligned, and directed in opposite directions.
-Generally, it would depend on the value C.
-Minimum value., can be a local minimum if the problem isn’t perfectly shaped.
+The conditions impose that the two gradients should be aligned, and directed
+in opposite directions. More generally, it would depend on the value C.
+There is a minimum value, but if the problem is not perfectly shaped, the
+minimum we would get can be a local minimum instead of an absolute minimum. This
+threatens the issue resolution.
 
-If I have $l(\beta)$, and am considering the norm of $\beta$ to be less that C value:
+Let's suppose we have $l(\beta)$. We may now consider the norm of $\beta$ to be
+lower than the C value:
 \begin{equation}
     ||\beta||_q \leq C_q
 \end{equation}
-We can do it with $l_0$, $l_2$, sometimes also with the $l_1$ norm.
 
-Why are we interested in that kind of things, what does it give us?
+Of course, this can also be done with different norms, like $l_0$, $l_2$,
+and sometimes also with the $l_1$ norm.
 
-With a not too big dataset, taken from a book. The goal here is to try to predict the crime rate, and to what it is correlated.
+\subsection{Example: crime data}
+
+Let's give a few examples related to such a problem. We start with the data
+presented in figure \ref{crime}
+
+\begin{figure}
+    \includegraphics{./Figures/crime.png}
+    \caption{Example: crime data, crime rate and five predictors for $N=50$ U.S.
+    cities}
+    \label{crime}
+\end{figure}
+
+These are not too big data: $N=50$ and $p=5$.
+With a not too big dataset, taken from a book. The goal here is to try to
+predict the crime rate, and to what it is correlated.
 
 $(x_{ij}, y_i)$ $i=1..N=50$ cities
 $j=1…5$
 
 The idea is to consider naively a simple problem.
 
-Here we may find linear combination of all different problems. For a physicist, it seems we’re not allowed to to so, because not homogeneous. But this helps finding correlations.
-
-$x’_{ij} = x_{ij} - \bar{x_j}$. In this case, we have zero mean, We may also want try to divide by the standard deviation. Not the case here.
+Here we may find linear combination of all different problems.
+For a physicist, it seems we’re not allowed to to so, because it is not
+homogeneous. However, this helps in finding correlations.
 
 \begin{equation}
-y=\sum_{j=1}^p \beta_j x_j
+    x’_{ij} = x_{ij} - \bar{x_j}
 \end{equation}
 
-Therefore we can write $l(\beta) = \frac{1}{N} \sum_{i=1}^N (y_i - \sum_{j=1}^p \beta_j x_{ij})^2$
+In this case, we have zero mean, We may also want try to divide by the standard
+deviation. This is not the case here.
+
+\begin{equation}
+    y=\sum_{j=1}^p \beta_j x_j
+\end{equation}
+
+Therefore we can write the relation:
+
+\begin{equation}
+    l(\beta) = \frac{1}{N} \sum_{i=1}^N (y_i - \sum_{j=1}^p \beta_j x_{ij})^2
+\end{equation}
 
 The result of this optimismation may be given as a function.
 
-Graph on the right, ridge regression.
-What is plotted is the value of the $\beta$ along the $x$ axis. This has to do with the cost ($c_q$). 
+Let's represent the results for the Ridge regression on figure \ref{ridgecrime}
+
+\begin{marginfigure}
+    \includegraphics{./Figures/ridgecrime.png}
+    \caption{Coefficient path for the ridge regression, plotted versus the
+        relative $l_2$ norm of the coefficient vector, relative to the norm of
+        the unrestricted least-square estimate $\tilde \beta$
+    }
+    \label{ridgecrime}
+\end{marginfigure}
+
+
+What is plotted is the value of the $\beta$ along the $x$ axis. This is related
+with the cost ($c_q$). 
 We can repeat for different values of the cost.
 If we do it for large $C$, we do not put any constraints, and therefore get the same $\beta$.
 
-if we put a very strong cost, like 0, the only solution is $\beta = 0$.
-Hence we’re looking at different solutions, constrained, and then we relax it to a state where there’s no constraint anymore.
+If we put a very strong cost, like 0, the only solution is $\beta = 0$.
+Hence we’re looking at different solutions, constrained, and then we relax it to
+a state where there’s no constraint anymore.
+
+Now, let's represent the results for the Lasso regression, on figure
+\ref{lassocrime}.
+\begin{marginfigure}
+    \includegraphics{./Figures/lassocrime.png}
+    \caption{Coefficient path for the lasso regression, plotted against the
+        relative $l_1$ norm of the coefficient vector, relative to the norm of
+        the unrestricted least-square estimate $\tilde \beta$
+    }
+    \label{lassocrime}
+\end{marginfigure}
 
 The lasso graph is the same, but performed with $l_1$ norm.
 
-There’s a way to understand this, by giving an illustration.
+There’s a way to understand this, by giving an illustration of the sparsity from
+$l_1$ constraint, as shown on figure \ref{sparsity}.
 
-Fig 2.2 slides.
+\begin{figure}
+    \includegraphics{./Figures/sparsity.png}
+    \caption{Estimation picture for the lasso (left) and the ridge regression
+        (right). The solud blue areas are the constraint regions
+        $|\beta_1| + |\beta_2| \leq t$ and $\beta_1^2 + \beta_2^2 \leq t^2$,
+        respectively, while the red ellipses are the contours of the residual-
+        sum-of-squares function. The point $\hat \beta$ depicts the usual
+        (unconstrained) least-squares estimate.
+    }
+    \label{sparsity}
+\end{figure}
 
 
 \begin{equation}
-y=F(x,\theta).
+    y=F(x,\theta).
 \end{equation}
 
 Linear models:
