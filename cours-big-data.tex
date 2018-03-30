@@ -1020,43 +1020,57 @@ will be constrained.
 %\end{itemize}
 
 \section{Maximum likelihood}
-First, let's discuss about maximum likelihood estimation.
-This is not a big-data specific approach. general in statistics.
-In general, I would have a model of the form $ y= f(x,\theta)+ \epsilon$
-where $\epsilon$ stands for the noise. it is a random variable.
-We suppose $\epsilon$ is a normal variable:
-$\epsilon \~ N(0,\sigma^2)$
+Let's discuss about the maximum likelihood estimation (MLE). We must keep in
+mind that this a general approach in statistics and not a big-data specific one.
+In general, we would consider a model of the form $y= f(x,\theta)+ \epsilon$,
+where $\epsilon$ is a random variable that stands for the noise.
 
-The probability to see x with theta:
+We may assume at a first sight that $\epsilon$ is a normal variable:
+
+\begin{equation}
+    \epsilon \~ N(0,\sigma^2)
+\end{equation}
+
+The probability to get $x$ with $\theta$ may be written as:
 \begin{equation}
     P(y|x,\theta) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp - \frac{(y-f(x,\theta))^2}{2\sigma^2}
 \end{equation}
 
 \begin{marginfigure}
-\TODO
-\caption{P(y|x,theta) representation. with the standard deviation $\sigma^2$ and centered on f(x,theta)}
-\label{gauss}
+    \TODO
+    \caption{$P(y|x,\theta)$ representation. with the standard deviation $\sigma^2$ and centered on $f(x,\theta)$}
+    \label{gauss}
 \end{marginfigure}
 
 Now, let's imagine we are given a set of values $(x_i,y_i)$. We want to find
-the best parameter $\hat \theta$.
-We look at the parameter that make the data the most likeable.
+the best parameter $\hat \theta$. For this, we can look at the parameter that
+make the data the most likeable.
 
-\begin{eqnarray}
+\begin{eqnarray*}
 \mathcal{L} (\theta|Z_1,\cdots,Z_n) & = &  \log P(Z^N|\theta)\\
     & = & \sum_{i=1}^N \log P(Z_i|\theta)\\
     & = & \sum_{i=1}^N \left[ -\half \log (2\pi\sigma^2) - \frac{1}{2\sigma^2} (y_i - f(x_i,\theta))^2 \right]\\
     & = & - \frac{N}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}{N} (y_i -f(x_i,\theta))^2 \\
     &=& -\frac{N}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} l(\theta)
-\end{eqnarray}
+\end{eqnarray*}
 
-MSE
+All we have considered until now is just a mean squared deviation (MSE) approach
+. The MLE approach can be written as:
 
-MLE: $max_\theta \mathcal{L}(\theta,Z^N) \rightarrow \hat\theta$
-theorem:
-if $y =f(x,\theta_0) + \epsilon$
-$$\E[\hat\theta] \rightarrow_{N\rightarrow\infty} \theta_0$$
-$$\hat\theta \~ N(\theta_0, F(\theta_0)^{-1})$$
+\begin{equation}
+    \max_\theta \mathcal{L}(\theta,Z^N) \rightarrow \hat\theta
+\end{equation}
+
+Thus we may get the following theorem:
+
+if $y$ can be written as the sum of $f$ and a random variable bias $\epsilon$: 
+$y =f(x,\theta_0) + \epsilon$, then the expected value $\E$ tends towards
+$\theta_0$ when $N$ is sufficiently high.
+\begin{equation}
+    \E[\hat\theta] \xrightarrow[N\rightarrow\infty]{} \theta_0
+\end{equation}
+
+Where $\hat\theta \~ N(\theta_0, F(\theta_0)^{-1})$
 
 $F(\theta) = \E\mathcal{L}(\theta)$ this is called the Fisher information.
 
@@ -1445,57 +1459,91 @@ next course : clustering.
 after that : neural networks, that can be used for any of those tasks, that
 involve a bit more methodology.
 
-CLASSIFICATION. 
 
-training data: $(x_i,k_i)$
+\section{Classification}
 
-label : $k_i = 1, 2, \ldots K$.
+Let's start with a set of training data indexed with $i$:  $(x_i,k_i)$ where the
+label $k_i$ can vary from 1 to $K$: $k_i = 1, 2, \ldots K$.
+
+Again, we face a challenge in using large datasets:
+\begin{equation}
+    x_{N+1} \xrightarrow{?} k_{N+1}
+\end{equation}
+
+Until now, we have only used regression methods. Let's try to do the same.
+
+\subsection{Regressions methods at one dimension}
+
+Let's start with only two categories : $K=2$
+\begin{equation}
+    k_i \in \{ 0, 1 \}
+\end{equation}
+
+From these data, we can try to predict the value of K with unsupervised learning
+methods. It means that we would get a classification, by trying to find how
+close the data are from $0$ or $1$.
+
+If we start with the $p=1$ case, we can represent a set of data on graph
+\ref{supvlearn6}.
+
+\begin{figure}
+    \TODO
+    \caption{Representation of a dataset with blue dots indexed as 0 and red
+        dots indexed as 1. A linear regression can be plotted on these data
+    }
+    \label{supvlearn6}
+\end{figure}
+
+Here we need to find a value $x_h$ somewhere to be able to split the value
+between two sets of data. Generally, we would work with more complicated
+problems, in larger dimensions.
+
+Here, if we carry out the following linear regression:
+
+\begin{equation}
+    y = \hat \alpha + \hat \beta x
+\end{equation}
+
+This is actually exactly what we did in the first lecture: we had to compute
+the $\hat \alpha$ and $\hat \beta$ that gave us the best results.
+
+The linear regression equation we get on this problem allow us to find the
+decision boundary, defined as the $\hat x$ corresponding to $\hat y = \half$.
+Thus, we may claim that when $\hat y$ is larger than $\half$, then $\hat k =1$,
+and when it is lower than $\half$, $\hat k$ vanishes.
 
 
+\subsection{Regressions at higher dimensions}
 
-Again, the challenge is using large datasets. we use big data.
-$x_{N+1} \rightarrow^? k_{N+1}$
+Let's start again at two dimensions: $p=2$.
 
-so far we've used only regression.
-if we start with only two categories : $K=2$.
-$k_i \in \{ 0, 1 \}$
+We work here with the data presented on figure \ref{decboundary2D1}
 
-from these data, I can try to predict the value of K in unsupervised learning.
-the closest to 0 and 1, and then get a classification.
+\begin{marginfigure}
+    \includegraphics{./Figures/decboundary2D1.png}
+    \caption{A classification example in two dimensions. The classes are coded
+        as a binary variable (blue = 0, orange = 1), and then fit by linear
+        regression. The line is the decision boundary, defined by
+        $x^T \hat \beta = \half$ drawn as a black line. The orange shaded region
+        denotes that part of input space classified as orange ($k=1$), while the
+        blue region is classified as blue ($k=0$).
+    }
+    \label{decboundary2D1}
+\end{marginfigure}
 
-let's start with the case where $p=1$.
-fig 6
+This method works only if the data are linearly separable -- \ie if we can
+separate them in two sets of data by an hyperplan, defining the decision
+boundary. We can there define an error.
 
-we have to find a value somewhere to split the value between two sets of data.
-generally, we have more complicated problems, in larger dimensions.
-here, if we do a linear regression:
-
-$y = \hat \alpha + \hat \beta x$.
-this is what we did in the first lecture: compute $\hat \alpha$ and $\hat \beta$ that gave us
-the best result.
-
-decision boundary:
-$if \hat y is larger than \half, then \hat k = 1$.
-
-$\hat y < \half => \hat k = 0$
-
-if we start again with p=2.
-it can be in two dimensions.
-
-fig 7.
-
-data linearly separable: we can put an hyperplan that separates the data.
-define a decision boundary.
-there we can define an error.
-
-NB: in advance, we cannot preduct wich method would work, before looking at the
-data. In practical, no method would separate perfeclty the data.
-if we augment the dimension of the space, we can consider other functions : for
-example quadratic instead of linear.
-tradeoff : if we add more parameters, sure we can reduce the training error, but
-also, in general, increase the variance.
-back to the problem already discussed: how to find the correct level of
-complexity. surely it can fit the data, but may not be generalised.
+It is worth noting that among many, we cannot predict in advance which prediction
+method would work, without looking at the data. In practical, no method would
+separate perfectly the data. If we augment the dimension of the space, we can
+consider other functions. For example, quadratic regression would usually give
+better results than linear. However, the use of higher dimensions spaces may
+present tradeoffs: if we add more parameters, the training error would be reduced
+, but the variance may also rise.
+The issue here is to find the correct level of compexity that can fit the data,
+without overfitting it and that can be generalised.
 
 data still have to be linearly separable.
 again we'll se a second class of methods. ability to solve different issues.
@@ -1881,8 +1929,8 @@ then we have
 \end{equation}
 
 
-If the ratio V/Vtot = 0.01.
-if we take something like p=10, we'll see that r/rtot = 0.6.
+If the ratio $\frac{V}{V_{tot}} = 0.01$.
+if we take something like p=10, we'll see that $\frac{r}{r_{tot}} = 0.6$.
 
 if we want to cover even a very small fraction of the volume, we have to go very
 far from the point.
