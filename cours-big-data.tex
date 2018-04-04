@@ -2281,42 +2281,169 @@ compute covariance matrixes, or covariance vectors. a way to understand the data
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \chapter{Unsupervised learning: clustering, K-means, hierarchical}
 \label{ch:unsupervised-2}
+Clustering
+
+
+The idea is simple: we want to classify our x. there are two methods. one is 
+called K-means clustering.
+the other hierarchical clustering.
+
+as usual, the way is to use  functions we want to maximise/minimise.
+cluster 1, cluster 2.
+we have to find the cluster by ourselves.
+measure of similarity/dissymilarity between points.
+let's define a distance $d_{ii'}$. let's take, for example, just the euclidian
+distance.
+
+\begin{equation}
+    d_{ii'} = ||x_i - x_{i'}||^2
+\end{equation}
+
+\begin{equation}
+    W(C) = \half \sum_{k=1}^K \sum_{(i,i') \in C_k^2} 
+\end{equation}
+
+with a partition of my points:
+K = # clusters.
+
+{1,\ldots,N} = C_1 \union \cdots \union C_k
+
+C_k \inter C_l = ensemble vide
+
+\begin{equation}
+    \min_C W(C) = ?
+\end{equation}
+
+we are not going to give all the details of the calculation.
+
+\begin{equation}
+    T = \half \sumin \sum_{i'=1}^N d_{ii'} = W(C) + B(C)
+\end{equation}
+with B defined by:
+\begin{equation}
+    B(C) = \half \sum_{k=1}^K \sum_{i\in C_k ; i'\notin C_k} d_{ii'}
+\end{equation}
+
+and finding $\min_C W(C)$ is then equivalent to find $\max_C B(C)$.
+
+warning, this only works for the euclidian distance !!!!!!!!
+
+
+exercise: let's work with:
+
+\begin{equation}
+    W(C) = \sum_{k=1}^K N_k \sum_{i\in C_k} || x_i - \bar x_k ||^2
+\end{equation}
+with $\bar x_k = \frac{1}{N_k} \sum_{i\in C_k} x_i$.
+and $N_k = #C_k$
+
+\begin{equation}
+    \bar x = \arg \min_m \sumin || x_i - m_k||^2 = \frac{1}{N_k} \sum_{i=1}^{N_k} x_i
+\end{equation}
+
+\begin{equation}
+    \min_C \min_{m_1,\ldots,m_k} \sum_{k=1}^K N_k \sum_{i\in C_k} ||x_i - m_k||^2
+\end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{equation}
+    \bar x = \arg \min_m \sumin || x_i - m_k||^2 = \frac{1}{N_k} \sum_{i=1}^{N_k} x_i
+\end{equation}
+
+\begin{equation}
+    \min_C \min_{m_1,\ldots,m_k} \sum_{k=1}^K N_k \sum_{i\in C_k} ||x_i - m_k||^2
+\end{equation}
+
+k mean clustering.
+we are doing the minimisation. start initially either with m or c.
+we are assuming that the mean of cluster one has a particular position, mean
+of cluster two is elsewhere.
+
+we have to compute it in diferent ways. there we redefine the clusters, and recompute the means.
+
+figure. once we redefine the mean, we recompute the clusters, and then redoit
+iteratively.
+
+the best way is to start from different points.
+if we end up with two different clusterings, we can say which one is better.
+
+let's now introduce another standard algorithm of clustering
+
+a way not to solve this problem of k.
+
+hierarchical clustering -> agglomerative
+                        -> divisive.
+
+we start in the case we construct clustering, each point is a cluster.
+Then we make a clustering, and start with N clusters. make n clusters,
+
+the first cluster that makes sense to compute, is just the minimum distances,
+and say the minimum distnace is just replaced by a cluter.
+initially, we just take the minimum between all the terms. At the end, we have
+points, but all the points are clusters.
+
+
+group average:
+\begin{equation}
+    \frac{1}{|C||C'|} \sum_{i,i' \in C} d_{ii'}
+\end{equation}
+
+single linkage:
+\begin{equation}
+    \min_{i\in C, i' \in C'} d_{ii'}
+\end{equation}
+
+complete linkage
+\begin{equation}
+    \max_{i \in C, i' \in C'} d_{ii'}
+\end{equation}
+
+in this way, we would make a series of N clusters.
+N \rightarrow N-1 \rightarrow  until 1.
+
+simple way to represent the data: dendogram. raprticular representation as a tree. cf fig 14.13.
+
+essentially ,the dedograms are different.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \chapter{Neural networks, from single neuron to multilayer networks}
 \label{ch:neural-networks}
-
 \chapter{Physics of machine learning, statistical mechanics of machine learning, applications}
 \label{ch:physics}
 
