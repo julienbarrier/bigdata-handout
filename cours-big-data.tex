@@ -1545,56 +1545,60 @@ present tradeoffs: if we add more parameters, the training error would be reduce
 The issue here is to find the correct level of compexity that can fit the data,
 without overfitting it and that can be generalised.
 
-data still have to be linearly separable.
-again we'll se a second class of methods. ability to solve different issues.
+Again we'll use a second class of methods. ability to solve different issues.
 fig 8 for example (marginfigure)
 
-now, let's add another data.
-if $y= 0,1,2$, there is no practical meaning. no classical order. here it is
-classification.
-it works well with two categories. if we have three categories, then we can
-split between two categories. data: 1 VS 1.
-based on the boundaries, I will decide which boundary I can consider.
+If we add to these data another class, for example $y=0,1,2$. There is now no
+classical order between the values and the linear regression cannot be computed
+on the three sets in one time. We have to split the data between two classes and
+to find two decisions boundaries that split the three classes.
+
+This was a very naive approach. Let's start again with $p=1$. Let's add more blue
+squares at higher abscissa. This is presented in figure \ref{supvlearn7}
 
 
-This was a naive approach. If I start again with p=1:
-fig 9.
+\begin{figure}
+    \TODO
+    \caption{Representation of a dataset with blue dots indexed as 0 and red
+        dots indexed as 1. A linear regression can be plotted on these data
+    }
+    \label{supvlearn7}
+\end{figure}
 
-we added data far enough to put the blue squares in another category.
+Here, we added data far enough to put the blue squares in another category.
 
-linear regression:
+The linear regression can be written as:
 
 \begin{equation}
     \min_\beta \frac{1}{N} \sum_i (y_i - \beta x_i)^2
 \end{equation}
 
-it is more convenient to work with more symmetric data.
-the problem with saying that the error for i is:
+We can see clearly that it is more convenient to work with more symmetric data.
+Here we can define the error $\varepsilon_i$ for the $i$ index.
 
 \begin{equation}
-    error_i = (y_i - \beta x_i)^2.
+    \varepsilon_i = (y_i - \beta x_i)^2.
 \end{equation}
 
-$K=2$: $k_i = \pm 1 bd$ if $\hat \beta x >0 => +1$
+For the $K=2$ problem, we can pose:
+
+$k_i = \pm 1 bd$ if $\hat \beta x >0 => +1$
 $if \hat \beta x<0 => -1$
 
-what matters is wether the quantity $\hat y = \hat \beta x$ has the correct sign
-or not.
+What matters here is wether the quantity $\hat y = \hat \beta x$ has the correct
+sign or not.
 
 \begin{equation}
     L(\beta) = \frac{1}{N} \sum_i \max(0, -y_i\beta^T x_i)
 \end{equation}
 
-here again, the idea is that when $\beta x$ is of the same sign as $y$, the maximum
-is zero, and the error is zero.
+Here again, the idea is that when $\beta x$ is of the same sign as $y$, the
+maximum is zero, and the error is zero. This is called hinge regression.
 
-this is called hinge regression.
+The idea of the problem is gradient descent, that as a smoother version, called
+logistic regression.
 
-the idea is gradient descent
-
-smooth version -> logistic regression.
-
-the idea is to replace this versiona
+the idea is to replace this version
 fig 10.
 \begin{equation}
     L(\beta) = \nth \sumin \ln (1+e^{-y_i \beta^T x_i} )
@@ -1975,6 +1979,338 @@ good, we might think about it from ourselves.
 
 \chapter{Unsupervised learning: dimensionality reduction, PCA, SVD}
 \label{ch:unsupervised-1}
+
+\section{Dimensionality reduction}
+
+So far we've seen only supervised learning, relation between two variables
+(x,y). essentially, the goal was generalization of a relation between x and y
+
+Today, we're going to see a bit of unsupervised learning.
+this time, we only have x, no y anymore.
+the goal is to find a pattern. we want to understand the data. it is a more
+difficult problem. we think about problems of images.
+we only have the picture, and it is our task to find how to classify them, and
+what are the common things between all the data.
+training set, validation set, test set : can not be done anymore. it is part of
+the reason it is more difficult.
+however, many things in common.
+in the supervised context, at the end, it comes to optimization of a function l
+of parameters x,y, and hyperparameters $\theta$,$\lambda$.
+
+\hat \theta = \arg \min l(x,y,\theta,\lambda).
+
+other approach, very similar : present the problem as a problem of optimisation.
+a more probabilistic one is: we assume $P(x|y,\teta,\lambda)$. we have a 
+statistical model. We have to decide what kind of probabilistic model we chose,
+and how to parametrise it. Very often, we can formulate it.
+Then we find the maximum likelihood $\mathcal{L}$ that we have to maximise,
+similar to the loss function $l$ that we had to minimise.
+
+
+for unsupervised learning:
+dimensional reduction.
+then we'll see clustering
+in the last lecture : some generative models.
+
+Let's start with dimensional reduction.
+Motivation to do this dimensional reduction.
+problem of the curse of dimensionality.
+
+general approach with high dimension data is to reduce the data to low dimension
+data.
+we start with the first method in dimensonal reduction :
+
+\subsection{Principle component analysis, PCA}
+
+Probably one of the most useful method. the first we can do if we have large
+datasets.
+As usual, we have some data:
+$x_{ij}$ where $i = 1\dots N$ the number of data, $j= 1\dots p$ the dimension.
+dimension $d < p$.
+
+let's start with $d=1$. how I can project the data on a line:
+Let's start with $p=2$. I want to reduce it to $d=1$
+
+photo 1.
+we are looking to find a direction that explains more of the variation.
+along the yellow line: almost just noise.
+red = principal direction that explains the data.
+
+Let's formulate it as an optimization problem.
+
+Like in the linear regression, I am looking at the line that minimises the
+distances between the line.
+
+\begin{equation}
+    l(a,m,v) = \nth \sumin ||x_i - m - a_i v ||^2
+\end{equation}
+and we assume that $||v||^2 = 1$ .
+we are looking at the parameters $a,m,v$ that minimise the function.
+We have to find the value of the projection as well as the data.
+
+I am going to differentiate versus all these parameters, and check what we'll
+get.
+
+First, let's write it as:
+\begin{equation}
+    l(a,m,v) = \nth \sumin (x_i - m - a_iv)^T(x_i - m - a_iv).
+\end{equation}
+with $x_i - m - a_i v)$ is of $p$ dimension.
+
+Let's start with a:
+
+\begin{eqnarray}
+    \frac{\partial l}{\partial a_i} & = & \nth v^T (x_i - m - a_i v)\\
+     & = & \nth (v^T (x_i - m) - a_i) = 0
+ \end{eqnarray}
+ Therefore $\hat a_i = v^T (x_i - m) = (x_i - m)^T v$.
+
+\begin{eqnarray}
+     \frac{\partial l}{\partial m} & = & \nth \sumin (x_i - m - a_i v)\\
+     & = & \nth \sumin [(x_i - m) - v^T (x_i - m) v] = 0
+\end{eqnarray}
+
+Therefore $\hat m = \bar x = \nth \sumin x_i$. Then we are left with the most
+difficult part: optimise with respect to $v$.
+
+To simplify, let's renormalise the data and consider:
+\begin{eqnarray}
+    l(\hat a, v) & = & \nth \sumin (||x_i||^2 - 2 x_i^T a_i v + \hat a_i^2 v^T v)\\
+     & = & \nth \sumin (||x_i||^2 - \hat a_i^2 )
+\end{eqnarray}
+
+The reason to do it is because $v^Tv = 1$ and $x_i^T a_i v = \hat a_i^2$.
+
+Let's write: 
+
+\begin{equation}
+    \nth \sumin \hat a_i^2 = \nth \sumin (v^T x_i)^2 = \nth \sumin \sum_{j=1}^p \sum_{k=1}^p v_j x_{ij} v_k x_{ik} = v^T C v
+\end{equation}
+with $C = \nth X^T X$, or $C_{jk} = \nth \sumin x_{ij} x_{ik}$.
+
+$C_{jk}$ is the covariance matrix. the quantity we have to maximise is related
+to the covariance matrix. maximising the left term in the previous equation.
+
+is equivalent to find the minimum of the right term.
+
+Finally, what I have to do is to find
+$$ \max_v v^T C v $$
+with the constraint of $||v||^2 = 1 $.
+
+then we have the lagrangian function : 
+$L (v) = v^T C v - \lambda v^T v$
+
+$\frac{\partial L}{\partial v} = 2 (Cv-\lambda v) = 0$.
+
+$C \hat v = \lambda \hat v$
+
+At the end, we need to solve the spectrum of the matrix.
+the direction $v$ is just going to be an eigenvector of C.
+we need to understand which eigenvector, which one we want.
+we want to maximise $v^T C v$. If I replace $C v $ by $\lambda v$, it is just
+
+\begin{equation}
+    \hat v^T C \hat v = \lambda \hat v^T \hat v = \lambda
+\end{equation}
+
+that we want to maximise.
+
+principal component P c = eigenvector with largest eigenvalue $\lambda$
+
+Again, there are lots of calculation, but at the end, the recipee is simple.
+Compute C, like of correlation between every dimension.
+look at the eigenvector that corresppond to the largest eigenvalue.
+and then projection of what we want as a data.
+
+The goal is to go from p at $d=1$, and then to generalise for $d\geq 1$.
+We would have to consider cases such as
+\begin{equation}
+    l(a,v) = \nth \sumin || x_i - \sum_{k=1}^d a_{ik} v_k ||^2
+\end{equation}
+
+with $v_k^T v_j = \delta_k^j$.
+
+we have $v_1,\ldots,v_d$ top eigenvectors of $C = \nth X^T X$.
+associated with the largest eigenvalues:
+$\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_d \geq \lambda_{d+1} \geq \cdots \geq \lambda_p$
+
+If I use it with generic data:
+
+figure 14.20: what we did before.
+
+PCA, human genomes.
+SNP : some bases along the genome that are different along individuals.
+
+4 bases: ATGC, and $L\sim 10^9$. we are looking only at some SNP because there
+we are able to find differences
+then get inforamtion about polymorphism.
+
+The data is $X_{ij}$: 1000 individuals, and then many other dimensions.
+The data that we get is:
+all the sequences of SNPs: N = 3e^3 and dimension of p.
+
+here it is only unsupervised.
+then we can try to find a y : associations between particular diseases and
+polymorphism. but not the problem here.
+
+Here: we just have the data and try to find what are the structure of the data.
+all depends on what kind of data we are working with.
+in this case, people realise that when we compare. what are the relation ships
+between individuals, in relation with their genomes.
+compute a big correlation matrix: this is what $C_{jk}$ is doing.
+if we rotate a bit the data, we find something like the map of europe.
+PCA and what we get as a result is a representation vs the geography.
+origin of the person doesn't go in the definition of the principal component.
+There is a link in the paper.
+
+peple have applied such analysis in other datasets, to reconstruct the history
+of migrations, etc. If we compute those data, we'll find the eigenvalues.
+
+but to get this, we need to reduce the datasets of 1000 individuals where we
+knew the origins (two parents coming from determined places).
+and then.
+
+generally, there are a few cleaning steps before having proper data.
+That was a simple example.
+
+$X_{ij}$, N samples, p dim.
+let's compute:
+
+$C_{jk} = \nth \sumin x_{ij}x_{ik}$
+and from here, let's compute the top eigenvectors of the matrix
+$v_1,\ldots,v_d$
+
+let's define a matrix called S:
+$S_{ab} = \frac{1}{p} \sum_{a=1}^p x_{aj} x_{bj}$ and from this one, we can get
+$U_1, \ldots, U_d$.
+From here, I decide: let's look at the correlations between these ones, and the
+correlations between SNPs.
+
+this is where the SVD, \ie the singular value decomposition is coming to the picture.
+
+\subsection{Singular value decomposition}
+This is telling us, that the fact 
+
+So, SVD is going to tell us that the two matrixes have the same spectrum:
+$\lamda_1 = \mu_1, \ldots, \lambda_d = \mu_d$.
+
+mathematical theorem is to say: we have a matrix $X_{ij}$ of size $N\times p$.
+It is always possible to find two matrixes so that we can write:
+\begin{equation}
+    X = U \Sigma V^T
+\end{equation}
+with $U^T U  = 1doublebarre$
+$V^T V = 1doublebarre$.
+
+with \sigma is diagonal with a spectrum of dimension d.
+there is always a way to transform the basis in the input-output space in a way
+we are only mapping one vector of the basis, with another one in the factor.
+
+\begin{eqnarray}
+    C & = & X^T X\\
+    & = &  (V \Sigma^T U^T)(U \Sigma V^T)\\
+    & = & V (\Sigma^T \Sigma) V^T
+\end{eqnarray}
+And if we do p times S, we got:
+
+\begin{eqnarray}
+    pS & = & XX^T\\
+    & = & (U \Sigma V^T)(V \Sigma^T U^T)\\
+    & = & U (\Sigma \Sigma^T) U^T
+\end{eqnarray}
+
+with $\Sigma \Sigma^T = \Sigma^T \Sigma = \sigma_k^2$.
+
+By using this kind of SVD mapping, we can relate the similarities that we see
+between individuals to correlations between SNPs.
+
+still an unanswered question: what do we take for d ?
+
+here, d=2 to see it in relevant dimension, but in general?
+it is something like an hyperparameter. usually with supervised learning, we
+know what to do.
+
+here, with unsupervised, we may use the information contained in the \lambda.
+data is only one-dimensional.
+
+let's draw $\rho(\lambda)$. first part of the spectrum = conrol data, and then
+we have a $\lambda_1$. In general, we can look a the quantity:
+\begin{equation}
+    \frac{ \sum_{j=1}^d \lambda_j}{\sum_{j=1}^p \lambda_j}
+\end{equation}
+
+that is the fraction of variance explained by the top dimension PCs.
+
+the typical criterion is to use this ratio.
+it gives an indication of how much dimension use.
+
+it is an empirical  criterion.
+
+let's come back to the stocks example. first lambda value: almost 50. very large
+variation. first mode of variation is global changes, we can assume as
+a first approximation that all the stocks are varying the same way. most of the
+variation that are present in the matrix C is just noise.
+this is what we see.
+typical spectrum we get from high dimensional problems.
+
+then we have a few eigenvalues that are lower. Something we typically do when we
+analyse that kind of data.
+something we can do is randomise the data. for example making permutation
+between the data. standard approach: shuffle the data.
+it gives us back the control value. we will still compute some correlation
+matrix. still capture some spectrum. what is written by control.
+reproduce the lower part of the spectrum.
+the message here is just to say, this is a standard criterium.
+when we have a high dimensional data, the fact is that if we sum all the red
+eigenvalues, the one that are considered as signal, only 2\% of the signal.
+we want to set appart the signal from the noise, given the fact that
+with high dimensional data, we have a lot of sampling noise.
+
+we are projecting in low dimensions. companies have time to co-vary. will be put
+together. what would be the eigenvectors? what kind of information could we get 
+by projecting those kind of data?
+
+the first two are similar, the last two are similar. the reason is that they're 
+coming from the same industry.
+
+PCA\& RMT: the sectors of the companies are taken as eigenvectors.
+there are peaks at some companies. here we get information of the economy.
+Information about different structures of the microbium, etc.
+compute covariance matrixes, or covariance vectors. a way to understand the data
+.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \chapter{Unsupervised learning: clustering, K-means, hierarchical}
 \label{ch:unsupervised-2}
 
