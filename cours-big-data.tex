@@ -2616,7 +2616,100 @@ for n = k,
 frac(\dots) = $x_b^{(k)} \phi'(u_a^{(k)} ) \sum_{j_{k+1}} \omega_{j_{k+1}a}^{(k+1)} e_{j_{k+1}}^{(k+1)}$
 
 
+example. recognition of digits. coming from US postal services.
+10 classes.
+as inputs, we need one neuron for each pixel. output: we used something like
+soft max. at the end, once we have trained these networks, set the value of the
+first layer based on the digits. 
+
+this example to show that only 15 neurons in the hidden layer.
+what is written is only the backpropagation algorithm. no hyper parameter.
+split into training set, and test set. training set larger.
+let's look at the website, start a very complicated code.
+relatively simple, already does 95\% accuracy. state of the art:99.8\%, that is 
+what human would do.
+deep neural networks: much many layers.
+
+more complicated network can perform to the level of human perfection.
+current application:
+- image recognition picture, convolution networks
+- process sequences that means process speech, movies or text. slightly
+different architecture.
+bit of idea of what goes in the current neural networks. essentially, the basic 
+architecture\dots..
+
+in one particular application, convolution networks, \dots
+idea before going into description.
+different layers, image is the first.
+we want a transformation of these data in such a way that at the end, we can
+apply a soft-max. \ie take our points, and put together all the images that are similar. there's a problem of the distance between the images. if we
+take the raw images, take all the pictures of cats/dogs together.
+at the end, project our data.
+somewhat there are some special properties of images. if we make a slight 
+rotation of the image, it doesn't change the distances.
+identify the edges in the picture.
+at the end, we convert the image in a series of activation maps, by applying
+many filters. question: what filter should I use.
+we are going to train the filters to find the good value of the weight that
+is going to identify the particular data in the image.
+
+
+
+mostly done with labels???
+
+
+now, come back to PCA.
+principal component analysis. simplest but most powerful approach that can be
+applied to data.
+that is unsupervised.
+
+as usual ,the data are:
+$x_{ij}$, $i = 1, \ldots, N$, $j=1,\ldots, p$.
+what we have to compute is the covariance matrix:
+$C_{ij}$. we normalise at first the data by substracting the mean.
+
+$x'_{ij} = x_{ij} - \nth \sum_{a=1}^N x_{aj}$
+
+$x' = x - \bar{x}$
+then
+
+$x'' = \frac{x'}{\sigma(x')}$
+
+therefore the matrix C is p times p dimension.
+So we will compute:
+$C_{jk} = \nth \sumin x_{ij} x_{ik}$. it is a correlation function.
+we can write it as:
+
+$C_{jk} = \overline{x_j x_k}$.
+in general, we should avoid making loops for sums, and find ways to compute it
+with linear algearba. in this case:
+$C_{jk} = \nth X^TX$
+the eigenvalues and eigenvectors are :
+$v_1, v_2, \ldots$ associated with $\lambda_1 \geq \lambda_2 \geq \cdots$.
+In general, we have a matrix V composed of the eigenvetors in the columns.
+
+we can represent the data by plotting the data versus $v_1$ and $v_2$.
+they are defined as a multiplicative constant. and then project the data.
+interpretation of that kind of diagram.
+each feature is contributing to the eigenvectors. we have to think of them as
+modes.
+if we look back at the examples given by financial data, we are correlating the return of our stocks. When we have two companies that are behaving in
+similar ways.
+
+
+
+
+
+
+
+
+
+
 \chapter{Physics of machine learning, statistical mechanics of machine learning, applications}
 \label{ch:physics}
+
+application of physics ideas to this field.
+
+
 
 \end{document}
