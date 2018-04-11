@@ -1,0 +1,262 @@
+\chapter{Neural networks, from single neuron to multilayer networks}
+\label{ch:neural-networks}
+9 apr 18
+
+most of the reason why people are excited about machine learning is
+what has been made possible with neural networks. it is mostly related to what
+we already seen.
+
+representation of real neuron, VS mathematical object.
+inspiration from biology.
+brain organised as a network of neurons. each of these neurons are a processor
+of information. many dendrites on which action potential coming in.
+then axon, transfer of information as action potential.
+
+scheme.
+$y=\phi (u)$
+$u = \sum_{j=1}^p \omega_j x_j$
+$x_0 =1$
+
+first example when $\phi$ is linear. linear regression.
+example:
+$\phi(u) = u$.
+$l(\omega) = \sumin (y_i - \phi(u_i))^2$
+taking the sum of squares. $\phi(u_i) = \sum_{j=1}^p \omega_j x_j$.
+linear regression, first example.
+
+another example that we've seen: logistic regresion (for classification).
+
+in this context, we took:
+$\phi(u) = \frac{1}{1+e^{-u}}$.
+the cost function can be written as:
+$l(\omega) = - \sumin k_i \ln y_i + (1-k_i) \ln (1-y_i)$
+$y_i = P(k_i = 1|\omega,x) = \frac{e^{\omega^T x}}{1+e^{\omega^T x}}$
+it is what we presented a few pages ago.
+$l(\omega)$ looks very much like an entropy.
+$y_i$ looks like a Boltzman distribution with a two-states system.
+
+$P(E) = \frac{e^-{\betaE}}{Z}$: real boltzman distribution. two energies
+E1 and E2. $P(E=E_1) = \frac{e^{\betaE}}{e^{-\betaE_0 + e^{-\beta E_1}}} = \frac{1}{1+e^{\beta\Delta E}}$.
+
+if $K\geq 2$,
+soft-max :
+$k_{im} = 1$ if $i$ is in class $m$.
+$i \in {1,\ldots, N}$ $m \in {1,\ldots,K}$.
+
+generalisation of the same formula when we have more than two states:
+$P(k_m = 1|x,\omega) = \frac{e^{x^T\omega_m}}{\sum_{n=1}^K e^{x^T\omega_m}}$
+
+$l(\omega) = -\sumin \sum_{m=1}^K (k_{im} \ln y_{im} + (1-k_{im})\ln (1-y_{im}))$.
+
+to find the best parameter of this model, write the function: maximum likelihood
+estimation (MLE). write:
+
+$\mathcal{L} = \ln P(\cdots)$
+to minimise: $l = - \mathcal{L}$.
+
+standard approach to define a model that is defined in term of probabilities.
+mainly to remind that we've already seen many examples on single neurons.
+essentially this will be discused later with classification of images.
+
+network of neurons, the last layer will convert the likelihood into probabilities.
+what is the probability that it is a dog, a cat, etc.
+
+many different non linear functions that can be used. we can see the sigmoids.
+nowadays in neural networks, ReLU and Leary ReLU are mostly used.
+
+Leaky ReLU: does not saturate at high U
+
+$\phi(u) = 1 if u>0, 0 if u \leq 0$.
+let's consider $p=2$, $\omega_1 = \omega_2 = -2$, $\omega_0 = 3$.
+let's consider that $x_1$ and $x_2$ are binary values : 0 or 1.
+and then that $u = 3-2(x_1+x_2)$.
+
+Let's see what are the different options.
+
+$x_2$ \ $x_1$   0   1
+0               1   1
+1               1   0
+
+it is a NAND gate
+it is a way whith which we can make logical combinations.
+this framework is one particular type of neurons. If I can do this, I can do any
+kind of computation.
+if we are doing picture recognition, input = pixels, output = what it is.
+
+
+try to do some optimisation, try to organise the NAND gates, to get the circuit
+that is going to achieve the function that we want. The big thing is that 
+we need an algorithm to get the perfect circuit, network. with gradient descent
+we can do it.
+we don't have to think too much about the connection.
+There would be two components.
+the weights themselves are parameters.
+
+If I take something more smooth by playing with the weights, I can do any
+calculation that I want.
+
+\subsection{Multilayer feedforward network}
+
+in general, we could imagine many neural networks.
+we have to train the network.
+very simple algorithm: called multilayer feedforward network. network organised 
+in layers.
+last layer : output, classification in classes : number K of outputs.
+input layer : pixels for example.
+and inbetween, many hidden layers. feedforward, because all the connections are from one layer to the next, all oriented in the same way.
+
+another type:
+
+\subsection{Backpropagation algorithm}
+smart implementation of gradient descent.
+we can start with a single layer.
+we've already seen this gradient descent algorithm.
+
+single layer:
+$l(\omega) = \half \sumin \sum_{m=1}^K (y_{im} - \phi(u_{im}))^2$
+$u_{im} = \omega_m^T x_i = \sum_{j=1}^p \omega_{mj}x_{ij}$
+
+$\frac{\partial l}{\partial \omega_{mj}} = - \sumin (y_{im} - \phi (u_{im}) \phi'(u_{im}) \frac{\partial u_{im}}{\partial \omega_{mj}}$
+ = $ - \sumin e_{im} x_{ij}$
+
+gradient descent
+
+$\omega_{mj} \leftarrow \omega_{mj} - \eta \frac{\partial l}{\partial \omega_{mj}} = \omega_{mj} - \eta \sumin e_{im} x_{ij}$
+
+on line: $\omega_{mj} \leftarrow \omega_{mj} - \eta e_{im} x_{ij}$.
+
+we're gonna do the same in the context of neural networks.
+
+$l(\omega) = \half \sumin \sum_{m=1}^k (y_{im} - x_{im}^{(L)})^2$
+
+given any input, I update the data, layer by layer. that is called forward 
+propagation : $x^(0) \rigtarrow x^{(1)} \rightarrow \cdots \rightarrow x^{(L)}$
+
+$x_{j_k}^{(k)} = \phi (u_{j_k}^{(k)})$.
+$u_{j_k}^{(k)} = \sum_{j_{k-1}} \omega_{j_k j_{k-1}} x_{j_{k-1}}^{(k-1)}$
+
+secondly, bacward propagation:
+$e^{(L)} \rightarrow e^{(L-1)} \rightarrow \cdots \rightarrow e^{(1)}$
+
+$e_{j_L}^{(L)} = - (y_{j_L}^{(L)} - x_{j_L}^{(L)}) \phi'(u_{j_L}^{(L)}$
+
+
+$e_{j_{k-1}}^{(k-1)} = \phi'(u_{j_{k-1}}^{(k-1)} \sum_{j_k} \omega_{j_kj_{k-1}}^{(k)} e_{j_k}^{(k)}$
+
+At the end, when we've done this forward an d backward, we have an update, that
+is the gradient descent. just take the product of the erors:
+
+$\omega_{ab}^{(n)} \leftarrow \omega_{ab}^{(n)} - \eta e_a^{(n)} x_b^{(n-1)}$
+
+What we'll try to do is derive??? those equations.
+
+$\frac{\partial l}{\partial \omega_{ab}^{(n)}} = - \sum_{j_L = 1}^N (y_{j_L} - \phi (u_{j_L})) \phi'(u_{j_L}) \frac{\partial u_{j_L}}{\partial
+\omega_{ab}^{(n)}}$
+
+let's redefine the indexes:
+layer k.
+index j for the neuron inside the layer.
+then we have $x_j^{(k)} = \phi(u_{j_k}^{(k)})$.
+
+$\frac{\partial l}{\partial \omega_{ab}^{(n)}} = \sum_{j_{L-1}} \frac{\partial x_{j_{L-1}}^{(L-1)}}{\partial \omega_{ab}^{(n)}} \sum_{j_L}
+\omega_{j_Lj_{L-1}}^{(L)} e_{j_L}^{(L)}$
+
+this is true for $k = L-1$ as shown:
+
+$\frac{\partial l}{\partial \omega_{ab}^{(n)}} = \sum_{j_k} \frac{x_{j_k}^{(k)}}{\partial \omega_{ab}^{(n)}} \sum_{j_{k+1}}
+\omega_{j_{k+1}j_k}^{(k+1)}e_{j_{k+1}}^{(k+1)}$
+
+with $\frac{\pratial x_{j_k}^{(k)}}{\partial \omega_{ab}^{(n)}} = \delta_{j_k}^a x_b^{(k)} \phi'(u_{j_k}^{(k)}$.
+for n = k,
+
+frac(\dots) = $x_b^{(k)} \phi'(u_a^{(k)} ) \sum_{j_{k+1}} \omega_{j_{k+1}a}^{(k+1)} e_{j_{k+1}}^{(k+1)}$
+
+
+example. recognition of digits. coming from US postal services.
+10 classes.
+as inputs, we need one neuron for each pixel. output: we used something like
+soft max. at the end, once we have trained these networks, set the value of the
+first layer based on the digits. 
+
+this example to show that only 15 neurons in the hidden layer.
+what is written is only the backpropagation algorithm. no hyper parameter.
+split into training set, and test set. training set larger.
+let's look at the website, start a very complicated code.
+relatively simple, already does 95\% accuracy. state of the art:99.8\%, that is 
+what human would do.
+deep neural networks: much many layers.
+
+more complicated network can perform to the level of human perfection.
+current application:
+- image recognition picture, convolution networks
+- process sequences that means process speech, movies or text. slightly
+different architecture.
+bit of idea of what goes in the current neural networks. essentially, the basic 
+architecture\dots..
+
+in one particular application, convolution networks, \dots
+idea before going into description.
+different layers, image is the first.
+we want a transformation of these data in such a way that at the end, we can
+apply a soft-max. \ie take our points, and put together all the images that are similar. there's a problem of the distance between the images. if we
+take the raw images, take all the pictures of cats/dogs together.
+at the end, project our data.
+somewhat there are some special properties of images. if we make a slight 
+rotation of the image, it doesn't change the distances.
+identify the edges in the picture.
+at the end, we convert the image in a series of activation maps, by applying
+many filters. question: what filter should I use.
+we are going to train the filters to find the good value of the weight that
+is going to identify the particular data in the image.
+
+
+
+mostly done with labels???
+
+
+now, come back to PCA.
+principal component analysis. simplest but most powerful approach that can be
+applied to data.
+that is unsupervised.
+
+as usual ,the data are:
+$x_{ij}$, $i = 1, \ldots, N$, $j=1,\ldots, p$.
+what we have to compute is the covariance matrix:
+$C_{ij}$. we normalise at first the data by substracting the mean.
+
+$x'_{ij} = x_{ij} - \nth \sum_{a=1}^N x_{aj}$
+
+$x' = x - \bar{x}$
+then
+
+$x'' = \frac{x'}{\sigma(x')}$
+
+therefore the matrix C is p times p dimension.
+So we will compute:
+$C_{jk} = \nth \sumin x_{ij} x_{ik}$. it is a correlation function.
+we can write it as:
+
+$C_{jk} = \overline{x_j x_k}$.
+in general, we should avoid making loops for sums, and find ways to compute it
+with linear algearba. in this case:
+$C_{jk} = \nth X^TX$
+the eigenvalues and eigenvectors are :
+$v_1, v_2, \ldots$ associated with $\lambda_1 \geq \lambda_2 \geq \cdots$.
+In general, we have a matrix V composed of the eigenvetors in the columns.
+
+we can represent the data by plotting the data versus $v_1$ and $v_2$.
+they are defined as a multiplicative constant. and then project the data.
+interpretation of that kind of diagram.
+each feature is contributing to the eigenvectors. we have to think of them as
+modes.
+if we look back at the examples given by financial data, we are correlating the return of our stocks. When we have two companies that are behaving in
+similar ways.
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,978 @@
+\chapter{General principles}
+\label{ch:general-principles}
+
+\begin{itemize}
+    \item Models
+    \item bias vs variance
+    \item cross-validation
+    \item maximum likelihood
+    \item Bayes
+    \item etc.
+\end{itemize}
+
+
+Generally, big data issues are composed of many parameters, with which it is
+very energy-consuming. We usually want to reduce the problems to one or two
+interesting parameters. Even if start with a lot of data, we would need to find
+what are those interesting parameters, and what are the important dimensions of
+the problem we will be working on.
+
+There are two advantages at reducing the number of parameters:
+\begin{itemize}
+    \item[accuracy] With less parameters, we can estimate them with much more
+        accuracy;
+    \item[easiness] it is always easier to estimate things on a condensed set
+        of parameters.
+\end{itemize}
+
+Hence the issue is to find a compromise between having enough parameters to
+estimate properly the result of the problem, without loosing precision when
+having a too large batch.
+
+\marginnote{Here $||\cdot||_0$ stands for the cardinal: $||\beta||_0 = \#(\beta_j \neq 0)$}
+
+Let $\tilde{l}(\beta)$ be defined as:
+\begin{equation}
+    \tilde{l}(\beta) = l(\beta) + \lambda ||\beta||_q
+\end{equation}
+
+Now, the problem lays in finding
+\begin{equation}
+    \min_\beta l(\beta) \; \text{given} \; ||\beta||_0 \leq C
+    \; \text{with} \; \beta = [0, \ldots, \beta_i, 0, \ldots, 0]
+\end{equation}
+
+It is not possible to provide this kind of problem with any good numerical
+solution. In fact, we would always try to find a compromise between what we are able to optimise efficiently and what is possible to optimise. We can
+write the problem in a new version, easier to solve:
+
+\begin{equation}
+    \min_\beta l(\beta) \; \text{given}\; ||\beta||_2 \leq C_1
+\end{equation}
+
+\section{The two models}
+
+There are two models that can be used to solve that kind of problem. The first
+is the \emph{Ridge regression} that consists in using the constraints that can
+be solved efficiently numerically.
+
+The second model is called the \emph{Lasso regression} and consists in finding:
+
+\begin{equation}
+    \min_\beta l(\beta) \; \text{given} \; ||\beta||_1 \leq C_2
+\end{equation}
+
+In the ridge problem, we assume that the problem is sparse: we only need a few
+parameters to capture the relationship.
+
+In fact, the problem can be reset by writing:
+
+\begin{equation} 
+    \tilde{l}(\beta) = (Y -X\beta)^T (Y-X\beta) + \lambda \beta^T \beta
+\end{equation}
+
+\begin{eqnarray}
+    \frac{\partial \tilde{l}(\beta)}{\partial \beta} &=& 2 (-X^T(Y-X\beta) + \lambda \beta)\\
+    & = & 2 (-X^T Y + (X^TX + \lambda \mathds{1})\beta
+\end{eqnarray}
+
+\marginnote{$\mathds{1}$ is the identity matrix.}
+
+We are here adding constraints to the problem, that will allow us to solve it
+numerically.
+
+
+\begin{equation}
+C_{jk} \hfill p>N
+\end{equation}
+\begin{equation}
+C_{jk} = \frac{1}{N} \sum_{i=1}^N x_{ij}x_{ik}
+\end{equation}
+
+\begin{equation}
+\bar{x} = 0 ; C = X^TX
+\end{equation}
+
+\begin{equation}
+X_{ij} \hfill  Nxp
+\end{equation}
+
+\TODO
+
+$p>N => C$ is non invertible.\\
+$N = 1, C_{jk} = x_{1j} x_{1k}$\\
+$C = XX^T$ \\
+here, $C$ is of rank 1.
+
+\marginnote{remind that $Z^TZ = ||Z||^2$
+\begin{equation*}
+Z^T y = <Z,y> = \vec{Z}\cdot\vec{y}
+\end{equation*}
+}
+
+Mathematically, $rank(C)\leq N$.
+
+This means that there are too many parameters for too few samples. If we try to
+solve this with a linear regression problem, it will give too many solutions.
+
+
+Here it is easy to understand that $p>N$ cases give problems. However, because
+we are working with big data, the $p\sim N$ cases also gie rise to problems. We
+would need $p<< N$ to have correct solutions.
+
+\section{Unsupervised learning}
+\subsection{Example of financial data}
+
+Let's start with stock data, as presented on figure \ref{financialdata}.
+
+\begin{marginfigure}
+    \includegraphics{./Figures/stock.png}
+    \caption{Stock data used as an example}
+    \label{financialdata}
+\end{marginfigure}
+
+With these data, we want to extract information. However, y data are not
+labelled. For this reason, we may not use the raw data, but try to find
+something else that better fits with the problem.
+
+Let the price of stock $i$ at time $t$ be $s_i(t)$. The stock index i can vary
+from 1 to $p=1,000$, and the data are separated with a time interval 
+$\Delta t = \SI{30}{\minute}$. The time variable $t$ ranges from 1 to $N=6228$
+(that represents 2 years).
+
+Let us define the following variables:
+
+\begin{eqnarray}
+    r_{ti} & = &  \ln \frac{s_i(t+\Delta t)}{s_i(t)}\\
+    x_{ti} & = & \frac{r_{ti} - \bar{r}_i}{\sigma(r_i)}\\
+    C_{ij} & = & \nth \sumin x_{ti} x_{tj} 
+\end{eqnarray}
+
+Here, we want to get rid of the $\alpha$ parameter; for this reason, we use the
+$r_{ti}$ data instead of the $s_i(t)$ parameter.
+
+Then we define $x_{ti}$, by substracting the mean and normalising with the
+standard deviation.
+
+Therefore, the $x_{ti}$ value has a null mean, and a standard deviation rescaled
+to 1. Hence we have rescaled the problem so that each data vary within the same
+range.
+
+Now, let's move to the data $C_{ij}$ that represents the correlation between two
+$x_{ti}$ variables. The matrix $C$ of $C_{ij}$ coefficients is of great interest
+in our problem.
+
+\marginnote{NB: When we consider some data, it is usually very important to
+    watch it before trying to compute anything else. Particularly, if something
+    looks obvious to the eye, we need to set it clearly, before trying to
+    interpret it with the math.
+}
+
+Before trying to make anycalculation, we can assume that Exxon's and Chevron's
+data are strongly correlated, as well as JP Morgan's and Bank of America's.
+
+Thus, we may suppose that $C_{Ex,Ch} > C_{Ex,JP}$.
+
+In order to analyse the data, we may compute the spectrum. 
+Or see clearly from the definition that the matrix is symmetric, and has all the
+properties to be diagonalised.
+
+\begin{equation}
+    C_{jk}, C_{jj} = 1 ; C_{ij} = C_{ji}
+\end{equation}
+
+Thus we get the eigenvalues: $\lambda_1, … , \lambda_p$, and the eigenvectors
+$v_1, … , v_p$. The dispersion of the eigenvalues is represented on figure
+\ref{fig2}.
+
+\begin{marginfigure}
+    \includegraphics{./Figures/eigenvaluesdisp.png}
+    \caption{dispersion of the eigenvalues}
+    \label{fig2}
+\end{marginfigure}
+
+The bottom part of the graph presented on figure \ref{fig2} is called the
+control part. Actually, we see that this part comprises mostly noise, and the
+interesting part of the data is the upper part, that describes longer range
+correlations.
+
+The control part just shuffles the data, and is due to permutation of the values
+. If we randomly shuffle the data, to remove all the interesting information
+(correlation between the different stocks), the control part stays the same.
+This is actually a way to see what kind of correlation we can get from just
+randomness, in a case where there is no correlation from the data.
+Thus, we can quantify the degree of noise. Because 98\% of the eigenvalues are
+contained in the 1st part of the data (control), it means that the stock data
+are comprised of 98\% of noise.
+
+Let's write the matrix C as:
+\begin{equation}
+    C = \sum_{j=1}^p \lambda_j v_j v_j^T
+\end{equation} 
+\begin{equation}
+    v_j^T v_k = \delta_j^k
+\end{equation}
+
+With the random metrics theory (RMT - branch of statistical physics), it is
+possible to compute analytically the shape of the control series:
+
+\begin{equation}
+    \min_x l(x) \; \text{given} \; g(x)\leq C
+\end{equation}
+\begin{equation}
+    \min_x l(x) + \lambda g(x) \; \text{with} \; \lambda \geq 0
+\end{equation}
+
+\begin{marginfigure}
+    \TODO
+    \caption{scheme}
+    \label{fig3}
+\end{marginfigure}
+
+We assume that everything is differentiable, therefore:
+
+\begin{equation}
+    \nabla_x l(x) = -\lambda \nabla_x g(x)
+\end{equation}
+
+The conditions impose that the two gradients should be aligned, and directed
+in opposite directions. More generally, it would depend on the value C.
+There is a minimum value, but if the problem is not perfectly shaped, the
+minimum we would get can be a local minimum instead of an absolute minimum. This
+threatens the issue resolution.
+
+Let's suppose we have $l(\beta)$. We may now consider the norm of $\beta$ to be
+lower than the C value:
+\begin{equation}
+    ||\beta||_q \leq C_q
+\end{equation}
+
+Of course, this can also be done with different norms, like $l_0$, $l_2$,
+and sometimes also with the $l_1$ norm.
+
+\subsection{Example: crime data}
+
+Let's give a few examples related to such a problem. We start with the data
+presented in figure \ref{crime}
+
+\begin{figure}
+    \includegraphics{./Figures/crime.png}
+    \caption{Example: crime data, crime rate and five predictors for $N=50$ U.S.
+    cities}
+    \label{crime}
+\end{figure}
+
+These are not too big data: $N=50$ and $p=5$.
+With a not too big dataset, taken from a book. The goal here is to try to
+predict the crime rate, and to what it is correlated.
+
+$(x_{ij}, y_i)$ $i=1..N=50$ cities
+$j=1…5$
+
+The idea is to consider naively a simple problem.
+
+Here we may find linear combination of all different problems.
+For a physicist, it seems we’re not allowed to to so, because it is not
+homogeneous. However, this helps in finding correlations.
+
+\begin{equation}
+    x’_{ij} = x_{ij} - \bar{x_j}
+\end{equation}
+
+In this case, we have zero mean, We may also want try to divide by the standard
+deviation. This is not the case here.
+
+\begin{equation}
+    y=\sum_{j=1}^p \beta_j x_j
+\end{equation}
+
+Therefore we can write the relation:
+
+\begin{equation}
+    l(\beta) = \frac{1}{N} \sum_{i=1}^N (y_i - \sum_{j=1}^p \beta_j x_{ij})^2
+\end{equation}
+
+The result of this optimismation may be given as a function.
+
+Let's represent the results for the Ridge regression on figure \ref{ridgecrime}
+
+\begin{marginfigure}
+    \includegraphics{./Figures/ridgecrime.png}
+    \caption{Coefficient path for the ridge regression, plotted versus the
+        relative $l_2$ norm of the coefficient vector, relative to the norm of
+        the unrestricted least-square estimate $\tilde \beta$
+    }
+    \label{ridgecrime}
+\end{marginfigure}
+
+
+What is plotted is the value of the $\beta$ along the $x$ axis. This is related
+with the cost ($c_q$). 
+We can repeat for different values of the cost.
+If we do it for large $C$, we do not put any constraints, and therefore get the same $\beta$.
+
+If we put a very strong cost, like $0$, the only solution is $\beta = 0$.
+Hence we’re looking at different solutions, constrained, and then we relax it to
+a state where there’s no constraint anymore.
+
+Now, let's represent the results for the Lasso regression, on figure
+\ref{lassocrime}.
+\begin{marginfigure}
+    \includegraphics{./Figures/lassocrime.png}
+    \caption{Coefficient path for the lasso regression, plotted against the
+        relative $l_1$ norm of the coefficient vector, relative to the norm of
+        the unrestricted least-square estimate $\tilde \beta$
+    }
+    \label{lassocrime}
+\end{marginfigure}
+
+
+The lasso graph is the same, but performed with $l_1$ norm.
+
+There’s a way to understand this, by giving an illustration of the sparsity from
+$l_1$ constraint, as shown on figure \ref{sparsity}.
+
+\begin{figure}
+    \includegraphics{./Figures/sparsity.png}
+    \caption{Estimation picture for the lasso (left) and the ridge regression
+        (right). The solud blue areas are the constraint regions
+        $|\beta_1| + |\beta_2| \leq t$ and $\beta_1^2 + \beta_2^2 \leq t^2$,
+        respectively, while the red ellipses are the contours of the residual-
+        sum-of-squares function. The point $\hat \beta$ depicts the usual
+        (unconstrained) least-squares estimate.
+    }
+    \label{sparsity}
+\end{figure}
+
+\TODO: introduction à cette équation.
+\begin{equation}
+    y=F(x,\theta).
+\end{equation}
+
+Linear models yield to:
+\begin{equation}
+    F(x,\theta) = \sum_{j=1}^p \theta_j x_j
+\end{equation}
+
+The principle hire is to have the results of $p$ data, and then, once we get 
+another dataset -- similar to the previous one -- we will be able to fit it and
+to find the solution:
+\begin{equation}
+    x_1, \cdots x_p, x_1^2, \cdots, x_p^2, \cdots cos x_1, \cdots
+\end{equation}
+
+\begin{equation}
+    F(x, \theta) = \sum \theta_j h_j(x)
+\end{equation}
+
+Later on, we will introduce neural networks. In this case, the function people
+are more familiar with will be:
+
+\begin{equation}
+    h_j(x) = \frac{1}{1 + \exp (-\omega_j^T x )}
+\end{equation}
+
+Where $\omega_j$ is the weight that adjusts the coefficients.
+
+Here, it becomes clear that there is a relation between $x$ and $y$. Considering
+this, there is now no limit to the complexity of the problem we can take.
+
+At this stage it becomes necessary to define a loss function $L$. This can be
+written as in equation \ref{lossfunc}.
+
+\begin{equation}
+    L (y, F(x, \theta)) = (y-F(x,\theta))^2
+    \label{lossfunc}
+\end{equation}
+
+With any given model and loss function, we need to define a training error
+$\varepsilon_{train}$, as shown in equation \ref{trainerr}.
+\begin{equation}
+    \varepsilon_{train} = \nth \sumin L (y_i, F(x_i,\theta))
+    \label{trainerr}
+\end{equation}
+
+The training error is of utter importance. However, this will not be the only
+quantity we will have to consider.
+In fact, there is also a test/generalisation error. This one would be the error
+we get when we are using these datapoint that have not been used in the training
+of the problem.
+
+There’s the training set, used to learn the parameters, and the additional data,
+on which we’re going to apply the model, and to try to generalise the data that
+have been used as an input for the fit.
+
+\begin{marginfigure}
+    \includegraphics{./Figures/traintesterror.png}
+    \caption{Training vs test errors}
+    \label{traintesterrors}
+\end{marginfigure}
+
+\begin{equation}
+    \varepsilon_{test} = \frac{1}{N’} \sum_{i=1}^{N’} L(y_i’,F(x_i’,\theta))
+\end{equation}
+
+Let's plot the training error $\varepsilon_{train}$ in comparison with the test
+error $\varepsilon_{test}$ on figure \ref{traintesterrors}. The test errors have
+been traced in red while the training errors have been traced in blue.
+
+\section{k-fold cross validation}
+
+Our objective here is not to get the best fit, but to generalise the given data.
+
+The procedure we will chose is called \emph{k-fold cross validation}. It
+consists in dividing the data in 5 datasets and then take one out of these to
+be used a the test, and all the others as the training sets.
+This is then repeated for all the other combinations. The data are divided in
+$K=5$ or $10$ and then most of the data are used to train the algorithm, while
+the last set of data is used to test the algorithm.
+
+In this procedure, the data set is splitted in:
+\begin{itemize}
+    \item training set (for the fit) (\eg 50\% of the data)
+    \item test set (for model selection) (\eg 25\% of the data)
+    \item validation set (for assessment) (\eg 25\% of the data)
+\end{itemize}
+
+This is used to better understand how to find the best parameters leading to the
+best fit.
+
+Let's take our previous example:
+\begin{equation}
+    y=F(x)
+\end{equation}
+
+The training set may be described as: $\hat{\theta}$
+
+The model is $y=F(x,\theta)$
+
+Thus we have $y= \hat{F}(x) = F(x,\theta)$.
+
+Now, let's work with another dataset:
+
+$x_0$
+\begin{equation}
+    \E [(F(x_0) - \hat{F}(x_0) )^2]
+\end{equation}
+ 
+Here, $\hat F$ is the prediction.
+
+This is considered over different training sets. It says how far we are from the
+value we want to predict.
+
+\begin{equation}
+    \E[(F(x_0) - \hat{F}(x_0) )^2] = F(x_0)^2 - 2F(x_0) \E (\hat{F}(x_0)) + \E (\hat{F}(x_0)^2)
+\end{equation}
+
+Where $\E (\hat{F}(x_0)^2)$ is $\var(\hat{F}(x_0) + (\E[\hat{F}(x_0)])^2$
+
+\ie $\E[(F(x_0) - \hat{F}(x_0) )^2] = (F(x_0) - \E[\hat{F}(x_0)]^2 + \var(\hat{F}(x_0))$.
+
+The test error may be written as the sum of the variance and the square of 
+the bias.
+
+\begin{equation}
+    \varepsilon_{test} = bias^2 + \var
+\end{equation}
+
+
+This can be generalised with the addition of a random variable $\epsilon$
+designating some noise:
+
+\begin{equation}
+    y = F(x) + \epsilon
+\end{equation} 
+
+Here it becomes necessary to add the irreducible error $\var(y)$
+
+In the context of linear regression, one may apply the Gauss-Markov theorem.
+This one tells us that in linear regression, when considering all the estimators
+that have no bias, the best one is the one that minimises the loss function
+presented in equation \ref{lossfunction}. 
+\begin{equation}
+    L(y,F(x)) = (y-F(x))^2
+    \label{lossfunction}
+\end{equation}
+This theorem shows that if one is interested in minimising the bias, in the
+context of linear regression, he should consider $\min_\beta l(\beta)$
+
+The absence of bias and the minimum variance is obtained for
+\begin{equation}
+    \min_\beta l(\beta)
+\end{equation}
+
+In general, the best solution is not the solution that has no bias.
+Hovewer, a better estimation of the parameters can be found when the set of data
+will be constrained.
+
+\section{bias VS variance}
+
+\TODO
+
+%last time, we learnt unsupervised learning.
+%$(x,y)_{i=1\cdots N}$
+
+%Goal : learn $x \rightarrow y$. function: theta
+%so that when given new $x_i$
+
+%$x_i \rightarrow^{predict} \hat{y_i} \sim y_i$
+%function: $\hat\theta$
+
+
+%function with two components : $err_{test}$ wich is composed of the bias +
+%variance.
+%if large amount of data, high variance, very hard to learn, and we get
+%very different parameters.
+
+%we may want to compromise this with a model with less parameters with 
+%a lower variance problem.
+%not only we want to pick the best variable in the model, but also the model
+%itself.
+%we consider a class of problems, described with a parameter $\lambda$.
+%we introduce $\lambda$ as a parameter of regularisation.
+
+%\marginnote{we are defining, for example, the error as:
+%\begin{equation*}
+%    l(\beta,\lambda) = \frac{1}{N}\sum_{i=1}^N (y_i - \beta x_i)^2 - \lambda ||\beta||_0
+%\end{equation*}
+%}
+
+%\begin{itemize}
+%\item training -> $\hat \theta$ given $\lambda$
+%\item validation -> $\hat \lambda$
+%\item test -> $Err_{test}$
+%\end{itemize}
+
+%At the begining, we divide the dataset into multiple datasetts.
+
+%K-fold cross validation : the idea is that we have one dataset, that we divide
+%into K subsets. We can get it with statistics. two weeks ago, we've seen an example of this, in the context of linear regression.
+%minimising the mean square error
+
+%planning of the day:
+%\begin{itemize}
+%\item Bayesian approach
+%\item how we do the approximation in practice.
+%\item example of CLASSIFICATION.
+%\end{itemize}
+
+\section{Maximum likelihood}
+Let's discuss about the maximum likelihood estimation (MLE). We must keep in
+mind that this a general approach in statistics and not a big-data specific one.
+In general, we would consider a model of the form $y= f(x,\theta)+ \epsilon$,
+where $\epsilon$ is a random variable that stands for the noise.
+
+We may assume at a first sight that $\epsilon$ is a normal variable:
+
+\begin{equation}
+    \epsilon \~ N(0,\sigma^2)
+\end{equation}
+
+The probability to get $x$ with $\theta$ may be written as:
+\begin{equation}
+    P(y|x,\theta) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp - \frac{(y-f(x,\theta))^2}{2\sigma^2}
+\end{equation}
+
+\begin{marginfigure}
+    \TODO
+    \caption{$P(y|x,\theta)$ representation. with the standard deviation $\sigma^2$ and centered on $f(x,\theta)$}
+    \label{gauss}
+\end{marginfigure}
+
+Now, let's imagine we are given a set of values $(x_i,y_i)$. We want to find
+the best parameter $\hat \theta$. For this, we can look at the parameter that
+make the data the most likeable.
+
+\begin{eqnarray*}
+\mathcal{L} (\theta|Z_1,\cdots,Z_n) & = &  \log P(Z^N|\theta)\\
+    & = & \sum_{i=1}^N \log P(Z_i|\theta)\\
+    & = & \sum_{i=1}^N \left[ -\half \log (2\pi\sigma^2) - \frac{1}{2\sigma^2} (y_i - f(x_i,\theta))^2 \right]\\
+    & = & - \frac{N}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}{N} (y_i -f(x_i,\theta))^2 \\
+    &=& -\frac{N}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} l(\theta)
+\end{eqnarray*}
+
+All we have considered until now is just a mean squared deviation (MSE) approach
+. The MLE approach can be written as:
+
+\begin{equation}
+    \max_\theta \mathcal{L}(\theta,Z^N) \rightarrow \hat\theta
+\end{equation}
+
+Thus we may get the following theorem:
+
+if $y$ can be written as the sum of $f$ and a random variable bias $\epsilon$: 
+$y =f(x,\theta_0) + \epsilon$, then the expected value $\E$ tends towards
+$\theta_0$ when $N$ is sufficiently high.
+\begin{equation}
+    \E[\hat\theta] \xrightarrow[N\rightarrow\infty]{} \theta_0
+\end{equation}
+
+Where $\hat\theta \~ N(\theta_0, F(\theta_0)^{-1})$
+
+$F(\theta) = \E\mathcal{L}(\theta)$ this is called the Fisher information.
+
+$I(\theta)_{ij} = - \frac{\partial^2 \mathcal{L}}{\partial \theta_j \partial\theta_k}$
+
+Therefore,
+
+$\hat\theta \sim (approx) N(\hat\theta, I(\hat\theta)^{-1})$
+
+\begin{marginfigure}
+\TODO
+figure parabolle inversée, maximum : courbature $-\partial\mathcal L/\partial \theta^2$, absisse max : $\theta_0$. ordonnée : L.
+\end{marginfigure}
+
+We want to find the best parameter, \ie the one that is the more likelihood to be \ldots
+
+$\mathcal{L}$ is called the log-likelihood. P is colled the likelihood.
+In a sense, we want to find the most likely model.
+
+We can mention, that there are two difficulties :
+\begin{itemize}
+\item we need to find the maximum
+\item problem of validation: if we have a more complicated model, we would increase
+the log likelihood, and no way to do the validation.
+\end{itemize}
+
+\section{Bayesian approach}
+
+Now, another approach: the Bayesian approach. Again, this is not specific to big-data.
+We may know that there are lot of debates in the meaning of probabilities. There
+are two schools: the frequentists: probabilities have a meaning only when the
+event is reapeating many times. Like a coin tail or head. Fundamentally, if I do
+it a large number of time, this is converging.
+If we take an event that can happen only once: the probability that there's life
+on the moon: for a frequentist, there's no meaning.
+the Bayesian view is different in nature: probability is not about counting, but
+about biliefs. This represent how I believe the event to be actually the case.
+Concretely, the idea of the bayesian approach is:
+elementary probability: when I have two random variables X, Y.
+The joint probability of (X,Y): P(X,Y). we can also define the marginals :
+$P(X)$, $P(Y)$, that are only the probability $P(X) = \sum_y P(X,Y)$.
+$P(X|Y)$: conditional probability.
+$P(X,Y) = P(X|Y)P(Y)$
+therefore $P(X|Y) = \frac{P(X,Y)}{P(Y)}$.
+
+
+$P(Z,\theta) = \frac{P(Z,\theta)}{P(Z)} = \frac{P(Z|\theta)P(\theta)}{P(Z)}$.
+This is called the Bayes formula.
+
+$P(Z=1) = \theta$
+$P(Z=0) = 1-\theta$, for example, for a binomial problem.
+
+$P(Z|\theta)$ is the likelihood I had before.
+In this approach, there's something new, that is $P(\theta)$ wich is called the prior.
+For a bayesian, we always have some \emph{a priori} bieliefs about the
+distribution of the parameters. When I see the data, I have to update my
+beliefs.
+$P(\theta|Z)$ is called the posterior.
+$P(Z)$ is called the evidence.
+
+Here we have to do the inference, that is the general model. Usually, when we
+look at probabilites, we look at $P(Z|\theta)$. reverse approach.
+We look at  the model, that also incorporates the prior.
+
+On the slides, one partialicular example of the prior to solve a praticular problem.
+
+\section{In practice\dots}
+Here, there's nothing to do with big data. example taken from the book of MacKay
+example: Jo has a test for a disease. a = state of health.
+a=1 if sick, 0 otherwise.
+the test is giving another variable b
+what is known about this test is that it can be positive even if there's no
+disease. $P(b=1|a=1) = 95\%$. same for zero.
+it means the test gives the right result in 95\% of the cases.
+we need to know the case when somebody of HIS AGE has the disease. this
+is gonna be the prior. $P(a=1) = 1\%$.
+The exercise is to find what is the probability $P(a=1|b=1)$.
+In the bayesian approach, we do not have a theta, but a distribution of the theta
+we always have a probability to have different values, especially the maximum
+\emph{a posteriori} estimate (MAP)
+which is given by taking the max of this:
+$\max_\theta P(\theta|Z)$.
+
+It will give the same results if we are assuming that this is not depending on theta. If we have a flat prior.
+Then, this is equivalent to the MLE.
+
+When I'm maximising the posterior, it means I'm maximising the likelihood.
+Thus we can see the likelihood as a bayesian approach, with a partialicular prior
+value.
+
+Let's say we have the same model as before. This time, we assume the prior is
+a one dimensional variable, with a gaussian distribution.
+
+$f(\theta)  = \sqrt{\frac{\lambda}{2\pi}} e^{-\lambda \frac{\theta^2}{2}}$
+
+Then, this will be very similar to the l validation, if we take the log of this.
+Then, this is multiplied by lambda theta square over two.
+
+When we take a prior on these parameters, we want to give more probability to
+the small values of the parameters. width of the gaussian: 1/sqrt(lambda).
+control the probability of the parameter to have a large value.
+restricting the range of the parameter that we are considering, as we saw before
+
+The goal here is to present this partialicular approach, and recover the maximum
+likelihood.
+An interesting aspect of the bayesian approach. Again, this is very general.
+Let's say that, in general, we have the probability of the data, given some
+hypotheses:
+
+$P(D|H_1)$
+Dis the data, $H_1$ thehypothesis.
+
+we want to compare with another hypothesis: $P(D|H_2)$
+
+What the bayesian approach is telling us is that we have to consider the
+probability :
+$\frac{P(H_1|D)}{P(H_2|D)} = \frac{P(D|H_1)P(H_1)}{P(D|H_2)P(H_2)}$
+
+it depends on the prior we put there. we do not here have no belief????
+
+One example of the maximum likelihood and the general approach.
+
+Problem of generalization.
+Let's say we have the data:
+$x_{i=1\ldots N}$. two approaches are possible:
+MLE that gives $\hat\theta$
+bayesian that gives $P(\theta|X)$.
+
+what is the probability of a partialicular value?
+
+$P(x_{N+1}) = $(MLE) $P(x_{N+1}|\hat\theta)$. if we need a best value of
+approximation, let's replace the parameter.
+
+= (bayesian)$ P(x_{N+1} | X^N) = \sum_\theta P(x_{N+1}|\theta P(\theta |x^N)$
+
+here, $P(\theta |x^N)$ should be used as the new prior. We are constantely
+updating our believes. this is the prior we get before knowing the
+value,
+depending on what we saw before. This has to be equal to:
+$\frac{P(x^N|\theta)P(\theta)}{P(x^N)}$
+
+There's a famous problem that has to do with that: the rule of succession.
+The sun is rising every morning, what is the probability it will rise tomorrow?
+Laplace discussed this issue.
+
+With different approaches, we may get different results. One of the simplest
+example.
+Let's assume there's some probability $\theta$ the sun is rising in the morning.
+We hae a binomial model. This is the same issue as a coin that always ends up
+in the same edge: tail for example.
+Maximum likelihood estimation: the probability would be 1.
+
+$x_i = 0/1.$
+
+$x^N = (x_1, \ldots ,x_N) = (1,\ldots,1)$
+
+$P(x_{N+1} = 1) = ?$
+If we do the maximum likelihood approximation, this would be 1 everytime.
+
+$X^N : N_1 times 1 ; N-N_1 times 0.$ (times : frequency it happens over time)
+
+$P(x_i|theta) = \theta$. One parameter model, binomial model.
+Obviously, the probability $P(x_i=0|\theta) = 1 - \theta$. this example cannot be
+simpler than this.
+
+
+theta can be anything between 0 and 1. $0 \leq \theta \leq 1$.
+
+I'm giving the same probability for every $\theta$. $P(\theta) \sim $uniform.
+
+$P(x_{N+1} =1|x^N) = \int d\theta P(x_{N+1}=1|\theta) P(\theta|x^N)$
+$= \int d\theta \theta \frac{P(x^N|theta)P(\theta)}{P(x^N)} where P(\theta) = 1$
+$= \frac{N!}{N_1!(N-N_1)!} \theta^{N_1} (1-\theta)^{N-N_1}$
+
+The difficulty lies in the $P(x^N)$ that does not depend on theta.
+
+$P(\theta|x^N)=C(N,N_1) \theta^{N_1} (1-\theta)^{N-N_1}$
+
+$\int d\theta P(\theta|x^N) = 1$
+
+$\int_0^1 d\theta \theta^a (1-\theta)^b = \frac{a!b!}{(a+b+1)!}$
+this exists also for a and b that are not integer values, and this is called the
+gamma function.
+If we use this formula, we would find this to be:
+
+$c(N,N_1) = \frac{(N+1)!}{N_1!(N-N_1)!}$
+with the proper normalisation.
+I need just one line to compute the stuff.
+If I compute this:
+
+$P(x_{N+1}=1|x^N) = \int_0^1 d\theta \theta \frac{(N+1)!}{N_1!(N-N_1)!} \theta^{N_1} (1 - \theta)^{N-N_1}
+= \frac{(N+1)!}{N_1!(N-N_1)!} \frac{(N_1 + 1)! (N-N_1)!}{(N+2)!}
+= \frac{N_1 + 1}{N+2} \neq \frac{N_1}{N} (MLE)$
+
+this is called as the laplacian formula.
+
+we have a non-zero probability to observe something that we have never observed
+before.
+
+$N=3. X^N = (1,1,1). can we bet that x_4 = 1?$
+maybe it is not very wise to say this. this rule takes this into account. here, the
+probability to be 0 will be 1/5, not zero.
+
+people that carry out statistics use pseudo-counts. we are adding one zero and one one.
+It is a way to regularise the variation.
+In this case, a frequentist would say that we have too few points and that we
+must give up the problem. for a bayesian, the calculation would be very
+dependant on the prior.
+Prediction on the next outcomes.
+
+commentary:
+$I(\theta) = -\frac{\partial^2 \mathcal{L}}{\partial \theta_i \partial \theta_j}$
+
+$\mathcal{F} (\theta) = \E [I(\theta)]$
+MLE: $\hat\theta \~N(\ldots)$
+For each dataset, we can use another expectation. It is mathematical consideration,
+considering all the possibilities of my data.If we arepartialificially generating
+data 
+when we want to prove all mathematical results analytically, we need all the
+possible datasets that we can get.
+variance about everything we can get when generating different datasets.
+
+
+
+
+
+
+
+second hour.
+
+
+
+Now I want to discuss the computational issues.
+
+$\hat \theta$ that I want to maximise. 
+log likelihood: $\mathcal{L}(\theta|x^N)$. we would have, in general, to get these
+data numerically, and not analytically, with optimised function. compromises to
+be done.
+
+Very simple, but the problem can be complicated if the function has several minimum.
+Let's assume the problem is convex: the function is convex, as well as the set
+of data.
+Any global minimum is a global minimum. It can be generate, but,\ldots
+
+In all these problems, we can consider a gradient descent.
+
+If we want to minimise the function,
+
+scheme fig 2.
+If we look at the gradient, and spartial from a point (random). we look at the
+grandient, and move in the direction of it.
+we usually take a very small displacement. spartial iteratively.
+
+$\theta_{t+1} = \theta_{t} - \eta \left( \frac{\partial L}{\partial \theta}\right)_{\theta_{t}}$
+
+scheme: cf notes.
+
+cf learning rate, etc.
+
+$L(\theta) = \sum_{i=1}^N (y_i - f(x_i,\theta))^2
+= \sum L_i(\theta)$.
+for each calculation, we have to recompute the data.
+a version of this algorithm is used very often, and is called stochastic gradient.
+What we do is: compute $L_i(\theta)$ for a subset of the points.
+So we take a subset of samples to estimate $L(\theta) = \sum_{i\in subset}$ and we
+change at each iteration.
+The sample is called mini-batch.
+
+There's one version of this algorithm, where everytime we take a single value as
+a subset: subset =1. this is called on-line learning. in this case, what we are
+doing is:
+
+$\theta_{t+1} = \theta_{t} - \eta \nabla_\theta L_i(\theta_{t})$.
+
+The issue is to get faster. In general, we have to take the sum.
+At the end, it is equivalent to do a move at everytime than getting the sum from
+the very beginning.
+Actually ,this algorithm is very powerful. In neural networks, backpropagation
+is nothing more than this algorithm put in application.
+
+This is really a local method. If I spartial from one point, I can end somewhere
+different. I can be trapped in local minima. It is really difficult to find the 
+correct minimum. That's why we usually work with convex functions, where local
+minima do not exist elswhere than the global minimum.
+
+$l_0$ norm, $l_1$ norm.
+$||\beta||_0 = \# nonzero \beta_j ; ||\beta||_1 = \sum_j |\beta|_j$
+
+For this reason the closest problem to the first is with $l_1$, and it is convex
+so that it can be solved with an iterative method. Generally, these are
+considerations we want to take into account.
+We will see examples of doing this next time.
+
+Next week: exercise as homework. practical.
+that will be the grade.
+
+$min_\beta L(\beta) -> \hat \beta$
+
+Lasso regression.
+this is one in which we are going to impose a condition:
+$||\beta|| \leq t$
+this is equivalent to the fact that we want to minimize :
+$min_\beta L(\beta) + \lambda ||\beta|| with some parameter \lambda.$
+
+ridge regression: $||\beta|| = ||\beta||_2^2
+= \sum \beta_i^2$
+
+if we take the $l_1$ norm:
+
+lasso regression: $||\beta|| = ||beta||_1 = \sum |\beta_i|$
+
+At this stage, we can take it as an exercise.
+
+Le'ts spartial with the function I want to minimize.
+$\mathcal{L} (\beta) = \frac{1}{N} \sum_{i=1}^N (y_i - \beta x_i)^2 + \lambda |\beta|$
+
+differentiation: we must be careful.
+
+$\frac{\partial\mathcal{L}}{\partial\beta} = 0$
+
+the maximum, if $\beta$ is positive ,let's say, we can get the value:
+$(\beta >0)$
+
+$\frac{\partial\mathcal{L}}{\partial\beta} = - \frac{2}{N} \sum_{i=1}^N (y_i - \beta x_i)x_i + \lambda.$
+
+I would take $\bar{x} =0, \bar{y} = 0$ and $\overline{x^2} = 1$. normalise all the
+data.
+
+In general, everything can have completely different units. It makes sense here
+to normalise, so that each data has the same range of variation.
+So
+
+$dL/d beta = -2 (\frac{X^T y}{N} - \beta) + \lambda = 0$
+
+thus $\hat \beta = \frac{X^Ty}{N}- \frac{\lambda}{2}$
+
+If $\frac{X^Ty}{N} > \frac{\lambda}{2}$, thus
+$\hat{\beta} = \frac{X^Ty}{N} - \frac{\lambda}{2} >0$
+
+if $\beta < 0$, then we can use the same approach.
+
+$\hat \beta= S_{\lambda/2} \left( \frac{X^T y}{N} \right)$
+
+$S_a (u) = \sign(u) \max(O,|u|-a)$. soft-thresholding operator. cf figure notes.
+
+This is a figure for p=1.
+
+cf on the website a slide with the formulas.
+
+for $p>1$,
+
+$L(\beta) = \frac{1}{N} \sum_i (y_i - \sum_k \beta_k x_{ik} )^2 + \lambda \sum_k |\beta_k|$
+
+$= \frac{1}{N} \sum_i (y_i - \beta_j x_{ij} - \sum_{k\neq j} \beta_k x_{ik} )^2 + \lambda |\beta_j| + \lambda \sum_{k\neq j} |\beta_k|$
+
+let's define $r_{ij} = y_j - \sum_{k\neq j} \beta_k x_{ik}$
+$\hat{\beta_j} <- S_{lambda/2} (\frac{1}{N} x_j^T r_j)$
+cyclical coordinate descent. we do this for j, and then repeat for j + 1 until
+convergenc.
+we get an interative algorithm. $\beta_1$, then $\beta_2$, \ldots
+
+Because the truc is convex, this is going to converge to the minimum of the function $L(\beta)$.
+
+cf note on this algorithm. If we understand the case for p=1, then we repeat,
+and because the problem is convex, we're going to converge to the single minimum.
+
+On wednesday, we will see single classification.
+

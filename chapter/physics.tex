@@ -1,0 +1,269 @@
+\chapter{Physics of machine learning, statistical mechanics of machine learning, applications}
+\label{ch:physics}
+
+application of physics ideas to this field.
+
+\section{Maximum entropy principle}
+
+equation with a thermal bath.
+canonical system.
+
+
+$p(x) = \frac{e^{-\beta E(x)}}{Z}$ $\beta = \frac{1}{kT}$
+$Z = \sum_x e^{-\beta E(x)}$
+
+$S[p] = - \sum_x p(x) \ln p(x)$
+$E* = <E> = \sum_x p(x) E(x)$
+
+therefore $L(p) = S(p) + \lambda <E>$
+$ = - \sum_x p(x) \ln p(x) + \lambda \sum_x p(x) E(x)$
+
+let's take the derivative
+$\frac{\partial L}{\partial p(x)} = -\ln p(x) - 1 + \lambda E(x) + \mu = 0$
+thus $\ln p(x) = \lambda E(x) + \mu - 1$
+this means that $p(x) = \exp (\lambda E(x) + \mu - 1)$
+$\lambda$ and $\mu$ come from the constraints. They are such that we have the equations L(p) = .. . 
+we can get it as
+$p(x) = \frac{e^{-\beta E(x)}}{Z}$. With $\beta,Z$ such that we have 
+$\sum p(x) E(x) = E*$ and $ \sum p(x) = 1$.
+also $\lambda = - \beta$ and $e^{\mu - 1} = \frac{1}{Z}$
+
+grand canonical system
+
+$x = 1, \ldots, 2^N$
+$p(x) = (p_1,\ldots, p_{2^N})$
+with $p_x = p(x)$.
+
+we get
+$\sum p(x) N(x) = N*$
+thus $p(x) = \frac{e^{-\beta (E(x) - \mu N(x))}}{Z} = \exp (\lambda_E E(x) + \lambda_N N(x) + \lambda_1)$
+with $\lambda_E = - \beta$, $\lambda_N = \beta_\mu$ and $e^{\lambda_1} = \frac{1}{Z}$.
+
+Let's now look $x_{ij}$, $i = 1\ldots N$ and $j=1\ldots p$.
+
+$\bar E = \nth \sumin E(x_i)$
+$\phi_a(x)$.
+
+let's take this generical formula into a particular case:
+$\bar \phi_a = \nth \sumin \phi_a(x_i)$.
+
+let's take the maximum entropy : $\max_p S[p]$ such that
+$<\phi_a> = \sum_x p(x) \phi_a(x) = \bar \phi_a$.
+this is the maximum entropy. i im trying to find this p.
+the p that we should get is something like:
+$p(x) = \frac{\exp \sum_a \lambda_a \phi_a(x)}{Z}$. It is a way to arrive to a
+particular model. We have $p(x|\lambda)$. In this model, we justify the
+particular form of the model we think is good to consider. There are some observation, and we get this probabilistic model, with some parameters. The
+parameters are uniquely defined with those constraints.
+
+We will continue to derive the general formalism and at the end, we'll see some 
+particular example.
+Last time we encountered those examples, we've seen it when we introduced
+logistic regression. we have the form of the probability distribution, and then
+we had a model where the probability of the data, given some parameters.
+We find the best parameters with the maximum likelihood. We start from a
+particular distribution, with some data.
+
+Let's start with some likelihood:
+$\mathcal(\lambda_a|x_i) = \ln P(x_1\cdots x_N | \lambda)$.
+$P(\dots)$ is the product $\prod_{i=1}^N P(x_i|\lambda)$.
+Thus $\mathcal{L}(\lambda_a|x) = \nth \sumin \ln P(x_i|\lambda)$
+
+Then, we want the maximum, and the gradient descent can allow us to find it:
+$\max_\lambda \mathcal{L} (\lambda | x)$.
+It will have a very good form.
+
+Here we have do differentiate with respect to the parameters:
+$\frac{\partial \mathcal{L}}{\partial \lambda_a}$
+
+we need to express the log likelihood as:
+$\mathcal{L}(\lambda|x) = \nth \sumin (\sum_a \lambda_a \phi_a(x) - \ln Z)$.
+
+$Z(\lambda) = \sum_x \exp (\sum_b \lambda_b \phi_b (x))$.
+$\frac{\partial Z}{\partial \lambda_a} = \sum_x \phi_a(x) \exp (\sum_b \lambda_b \phi_b(x))$
+
+$\frac{\partial \ln Z}{\partial \lambda_a} = \frac{1}{Z} \frac{\partial Z}{\partial \lambda_a} = \sum_x \phi_a (x) p(x) = <\phi_a>$.
+
+gradient descent $\lambda_a \leftarrow \lambda_a + \eta (\bar\phi_a - <\phi_a>)$
+then I have to reevaluate the quantity $<\phi_a>$ until the gradient vanishes.
+
+This rule is called the Boltzmann machine.
+
+In practice, there's still a difficulty. We need very simple systems to compute
+the analytical solution. In practice, we do this numerically. We have to sample
+some of the terms, to make an average.
+Monte Carlo methods to do it. connections with the Ising Model.
+
+It is not really an accident that the methods people are using in statistical
+learning have already been invented by physicist. This is the same kind of
+methods.
+curse of dimensionality.
+
+We need Markov Chain Monte Carlo (MCMC).
+It is a way to sample the chain, in such a way
+it is very likely to have x at a very low probability. One way to do it is to
+get x at random, compute p(x). There we are very likely to take x at a very low
+probability.
+Physically, we try to sample an equilibrium configuration.
+
+reminder of statistical physics.
+there are many versions. one in particular is called the metropolis-hasting.
+we are giving a rule to say that if we start from a configuration, we are asked
+what is the probability p(x'|x).
+
+in the ising model, we start with a random configuration of spins. we flip one
+spin, and we have to decide wether we need to accept it or to reject it.
+Those monte carlo are done in such a way that if we average over the trajectory,
+we would get a good estimate of $<\phi_a>$.
+
+One particular rule is to say that the probability is :
+$p(x'|x) = 1$ if $E(x') < E(x)$ and $\exp -\beta (E(x')-E(x))$ if $E(x')\geq E(x)$.
+
+$x_1 \rightarrow x_2 \rightarrow \cdots \rightarrow x_T$.
+
+
+
+
+\section{Application in biophysics: decoding proteins}
+
+corresponds to something he is currently working.
+how do we code genes, how do we code the genome. cells are made mostly of
+proteins.
+
+sequence of a particular molecule.
+long word, with many letters (20 aminoacids)
+hard to specify the function that the protein is do.
+proteins can bind to other molecules, example of antibody that can target
+particular pathogens.
+another is catalysis, with natural enzymes.
+another property is allostery. it is the idea that proteins can essentially 
+for instance, particular molecules that bind to a side, and then \dots
+regulate the activity of a moelcule.
+
+how do we go to the sequence to a function, and reciprocally, in a more
+engineering way, we may want to design some function, and therefore
+think about what sequence we need to code.
+
+traditional way pepole are using this problem: classical biophysics approach.
+shape of molecule can be sufficient to a function. example of double helix of
+DNA. the essential information are carried out with this double helix. x-ray 
+diffraction patterns.
+clear that the thing can be replicated from one way to another.
+
+current paradigm, same approach.
+
+from sequence to structure, physics problem.
+many experiments, we can make model.
+
+from structure to function, it is very difficult to get to the function.
+Very difficult to predict what are the effects of mutations. (if we change one
+letter)
+it is also difficult to engineer, and design new proteins when we want particular
+functions.
+
+
+big data perspective. not look at it in a physicist way, but more an evolutionary
+problem. connect sequence to function. actually , many examples from evolution.
+if we look at different organisms, the core metabolism is the same enzymes that we have individually. but mutations introduced in sequences. and then,
+if the mutation improve or does not affect the function, can be preserved.
+it is like the monte carlo method, making many sequences and try to find the one
+that still works.
+similar function but different sequence.
+many examples of sequences with the same function.
+there have been a lot of progress in sequencing. we are now able to read the genes.
+graph shows that in the recent years, many things are avalable. log scale on the
+y axis.
+nowadays we also have full genomes.
+try to connect the sequences to the proteins. Try to learn from these data
+relationships.
+connected to the fact there is high degeneracy of the relation sequence -> function.
+we have many sequences, many functions. 20\% of he letters in common.
+we are facing unsupervised problems.
+we want to understand what are the patterns in the sequences that may explain they have a common expression.
+
+\subsection{example : trypsin}
+
+enzyme that is a protease.
+can be found in the rat. 20 amino acids.
+we need to gather a large number of sequences, from different organism with
+similar function.
+interogate the web, databases of sequences.
+if some sequences share sufficiently datasets, it is not due to hazard. some
+commont ancestor.
+we can get many info from this, whith many  other organisms.
+
+multiple sequence alignment.
+algorithm that try to optimise the similarities between the sequences, by
+introducing some gaps.
+table: each line corresponds to a different sequence. 90 positions represented.
+different sequences, several thousands sequences, several hundreds positions.
+
+data: collection of sequences that have a common ancestory origin.
+we need to think about these sequences with common letters, what explains they have common functions. what are the patterns explaining this?
+
+
+the basic principle is to say constraints on substitutions.
+priniple of co-evolution. correspond to correlation between the columns.
+interesting to look at correlations. essentially, the particular problem of
+unsupervised learning specific to particular datasets.
+big problem that we like to think of our sample as completely independant 
+eachother.
+all coming from the same common ancestors. when two sequences are similar,
+similarity coming from the constraints.
+similarities due to recent common ancestor.
+in fact we have not independant samples.
+
+apply something based on PCA. example he did some years ago.
+
+if we have, let's say, a sequence : A C E\dots
+we can code these 20 letters with a vector of dimension 20.
+[1 000 \dots 0 ][010\dots0][00010\dots0] each vector has a dimension 20.
+total lenghth $p = 20L$a
+and $N \sim 10^4$
+$x_{ij}$ data. from this one, we can compute the correlation matrix:
+$C_{jk} = \nth \sumin (x_{ij} - \bar{x_j}) (x_{ik} - \bar{x_k})$
+it is the correlation between one amino-acid and another aminoacid elsewhere in
+the sequence.
+
+then we can try to understand the patterns that are in this matrix.
+If we try PCA, there is a way to project in 2 dimensions and get the different
+group opposition that are standing out of the bulk.
+what we can do is similar to the thing done with financial data. 
+
+sector: group of coevolving positions.
+we were able to group together the companies in the same markets.
+here, try to interpret the similar activities. almost the same, without having
+any prior configuration.
+
+what we show here is a sequence in which we are mapping out along the linear sequence, they are distributed in a postition that is not obvious.
+
+what are those sectors. in the economy, we already knew what where the business
+sectors.
+
+data show that these things are donig something.
+experimental data on the 3D structure of the protein. We can map the positions
+on the 3D structure of the protein. initially along the linear sequence,
+distributed in a not obvious way. but physically, connected!!
+
+we have also some data on proteins. mutate it, change particular letter, and
+then measure some biophysical properties on the protein.
+done on a few positions in the blue/red sectiors.
+
+measure of catalytic efficiency, and melting temperature. measure this as a maesure of stability.
+black point WT: wild type.
+mutation in the red sector: we change the catalytic efficincy but not the melting temperature.
+opposite also true.
+these inforamtion can be done with those sequencing.
+control different aspects of the functions.
+
+one way in which we go from the data to the function.
+done 10 years ago, and lots of progress. in particular the technology to make
+such experiments possible. have been done. same measurements on every possible
+mutations. done in his lab. generalising this kind of graph for $10^3$ points.
+
+\section{MaxEnt for contact prediction}
+
+idea is to use the maximum entropy model to describe such kind of data.
+\TODO
+
+
